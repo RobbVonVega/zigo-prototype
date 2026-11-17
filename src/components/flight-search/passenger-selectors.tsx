@@ -10,15 +10,27 @@ import { PASSENGER_MAX, type PassengerCounts } from "@/hooks/use-flight-search";
 export type PassengerSelectorsProps = {
   counts: PassengerCounts;
   onChange: (id: PassengerId, delta: 1 | -1) => void;
+  /** Stacked rows with the counter on the right (results side panel). */
+  stacked?: boolean;
 };
 
 /**
  * Passenger counters (Figma node 6706-1398). Each click adds or removes one
- * passenger, clamped between 0 and 9.
+ * passenger, clamped between that passenger's floor and 9.
  */
-export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps) {
+export function PassengerSelectors({
+  counts,
+  onChange,
+  stacked = false,
+}: PassengerSelectorsProps) {
   return (
-    <div className="flex h-8 items-center gap-3 px-[10px]">
+    <div
+      className={cn(
+        stacked
+          ? "flex w-full flex-col gap-4"
+          : "flex h-8 items-center gap-3 px-[10px]",
+      )}
+    >
       {passengers.map((passenger, index) => {
         const value = counts[passenger.id];
         const canDecrease = value > passenger.min;
@@ -26,11 +38,16 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
 
         return (
           <Fragment key={passenger.id}>
-            {index > 0 ? (
+            {!stacked && index > 0 ? (
               <span aria-hidden="true" className="h-[18px] w-px bg-line" />
             ) : null}
 
-            <div className="flex items-center gap-[10px]">
+            <div
+              className={cn(
+                "flex items-center gap-[10px]",
+                stacked && "justify-between",
+              )}
+            >
               <span className="text-xs leading-[14.4px] font-semibold tracking-[-0.04em] text-ink">
                 {passenger.label}
               </span>

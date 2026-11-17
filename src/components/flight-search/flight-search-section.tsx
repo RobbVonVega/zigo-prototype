@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { AdvancedFilters } from "./advanced-filters";
@@ -10,6 +11,7 @@ import { SearchLoader } from "@/components/search-loader";
 import { useFlightSearch } from "@/hooks/use-flight-search";
 import { flightSearchTitle } from "@/lib/flight-search";
 import { SEARCH_DURATION_MS } from "@/lib/search-loader";
+import { buildResultsUrl } from "@/lib/results-url";
 
 /**
  * Title + search panel + advanced filters (Figma node 6706-1386).
@@ -17,6 +19,7 @@ import { SEARCH_DURATION_MS } from "@/lib/search-loader";
  * "Buscar" opens the search loader (6739-4961) for SEARCH_DURATION_MS.
  */
 export function FlightSearchSection() {
+  const router = useRouter();
   const search = useFlightSearch();
   const [isSearching, setIsSearching] = useState(false);
   // Bumped on every search so the loader remounts and restarts its phrases.
@@ -32,7 +35,19 @@ export function FlightSearchSection() {
     if (searchTimer.current) clearTimeout(searchTimer.current);
     setSearchRun((run) => run + 1);
     setIsSearching(true);
-    searchTimer.current = setTimeout(() => setIsSearching(false), SEARCH_DURATION_MS);
+    searchTimer.current = setTimeout(() => {
+      setIsSearching(false);
+      router.push(
+        buildResultsUrl({
+          tripType: search.tripType,
+          origin: search.origin,
+          destination: search.destination,
+          departureDate: search.departureDate,
+          returnDate: search.returnDate,
+          counts: search.counts,
+        }),
+      );
+    }, SEARCH_DURATION_MS);
   }
 
   useEffect(() => {

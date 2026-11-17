@@ -26,9 +26,20 @@ cliente.
 | Acción de "Buscar" (resultados) | Pendiente |
 | Contenido con ancho máximo de 1040px | Listo |
 | Loader al buscar (6739-4961) | Listo |
+| Pantalla de resultados (6724-5421) | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
+
+## Rutas
+
+| Ruta | Pantalla |
+| --- | --- |
+| `/` | Búsqueda de vuelos + promo + próximos vuelos |
+| `/resultados` | Resultados con panel de búsqueda, filtros, 5 bloques de precio y resumen sticky |
+| `/styleguide` | Referencia interna de tokens |
+
+La búsqueda viaja por la URL (`/resultados?trip=round-trip&from=UIO&to=BOG&dep=…`), así que un enlace directo funciona y el botón `Buscar` de resultados la reescribe.
 
 ## Cómo correrlo
 
@@ -55,6 +66,12 @@ src/
     promo-banner.tsx   # banner "Vuela a Bogotá"
     upcoming-flights.tsx # "Tus próximos vuelos" + grilla
     flight-card.tsx    # tarjeta de vuelo
+    results/
+      results-view.tsx        # pantalla de resultados (estado de selección)
+      results-search-panel.tsx # columna izquierda de búsqueda
+      flight-price-block.tsx  # bloque de precio + combinaciones
+      flight-option-row.tsx   # fila de vuelo (radio, horario, escalas)
+      trip-summary-card.tsx   # resumen sticky "Detalle de tu viaje"
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -83,6 +100,8 @@ src/
     tokens.ts          # espejo JS de los tokens, para /styleguide
     upcoming-flights.ts # datos de la promo y de las 4 tarjetas
     search-loader.ts   # frases y tiempos del loader
+    results.ts         # 5 itinerarios mock + formato COP
+    results-url.ts     # serialización/parseo de la búsqueda en la URL
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)

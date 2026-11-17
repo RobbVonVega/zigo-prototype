@@ -66,3 +66,10 @@ export function searchAirports(query: string): Airport[] {
     ),
   );
 }
+
+/** Case-insensitive lookup by IATA code. */
+export function findAirport(code?: string | null): Airport | null {
+  if (!code) return null;
+  const term = code.toUpperCase();
+  return airports.find((airport) => airport.code === term) ?? null;
+}

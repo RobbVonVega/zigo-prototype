@@ -15,9 +15,19 @@ import type { Airport } from "@/lib/airports";
 export { PASSENGER_MAX };
 export type { PassengerCounts };
 
-const initialCounts = Object.fromEntries(
+const defaultCounts = Object.fromEntries(
   passengers.map((passenger) => [passenger.id, passenger.count]),
 ) as PassengerCounts;
+
+/** Optional seed, used by the results screen when it reads the URL. */
+export type FlightSearchInitial = {
+  tripType?: TripTypeId;
+  counts?: Partial<PassengerCounts>;
+  origin?: Airport | null;
+  destination?: Airport | null;
+  departureDate?: Date;
+  returnDate?: Date;
+};
 
 /** Counter floor per passenger type: adults never drop below 1. */
 const minimums = Object.fromEntries(
@@ -29,13 +39,24 @@ const minimums = Object.fromEntries(
  * The section owns the hook and passes values/handlers down, so every control
  * stays a dumb, typed component.
  */
-export function useFlightSearch() {
-  const [tripType, setTripType] = useState<TripTypeId>(activeTripTypeId);
-  const [counts, setCounts] = useState<PassengerCounts>(initialCounts);
-  const [origin, setOrigin] = useState<Airport | null>(null);
-  const [destination, setDestination] = useState<Airport | null>(null);
-  const [departureDate, setDepartureDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+export function useFlightSearch(initial: FlightSearchInitial = {}) {
+  const [tripType, setTripType] = useState<TripTypeId>(
+    initial.tripType ?? activeTripTypeId,
+  );
+  const [counts, setCounts] = useState<PassengerCounts>({
+    ...defaultCounts,
+    ...initial.counts,
+  });
+  const [origin, setOrigin] = useState<Airport | null>(initial.origin ?? null);
+  const [destination, setDestination] = useState<Airport | null>(
+    initial.destination ?? null,
+  );
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(
+    initial.departureDate,
+  );
+  const [returnDate, setReturnDate] = useState<Date | undefined>(
+    initial.returnDate,
+  );
 
   /** Steps one unit, clamped between the passenger's floor and 9. */
   function changePassenger(id: PassengerId, delta: 1 | -1) {

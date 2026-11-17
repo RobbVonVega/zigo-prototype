@@ -32,6 +32,11 @@ Everything in this prototype traces back to a node in the ZIGO Figma file:
 | `6706-1447` | "Tus próximos vuelos" + grid | [upcoming-flights.tsx](../src/components/upcoming-flights.tsx) |
 | `6725-9043` | Flight reservation card | [flight-card.tsx](../src/components/flight-card.tsx) |
 | `6739-4961` | Search loader modal | [search-loader.tsx](../src/components/search-loader.tsx) · [lib/search-loader.ts](../src/lib/search-loader.ts) |
+| `6724-5421` | Results — Lateral 2 Columns | [app/resultados/page.tsx](../src/app/resultados/page.tsx) · [results-view.tsx](../src/components/results/results-view.tsx) |
+| ↳ | Left search column | [results-search-panel.tsx](../src/components/results/results-search-panel.tsx) |
+| ↳ | Price block + flight row | [flight-price-block.tsx](../src/components/results/flight-price-block.tsx) · [flight-option-row.tsx](../src/components/results/flight-option-row.tsx) |
+| ↳ | Sticky "Detalle de tu viaje" | [trip-summary-card.tsx](../src/components/results/trip-summary-card.tsx) |
+| ↳ | Mock itineraries / COP format | [lib/results.ts](../src/lib/results.ts) |
 | — | Calendar (shadcn-style) | [ui/calendar.tsx](../src/components/ui/calendar.tsx) |
 
 Not built yet (next passes): none of the Flight with Ads frame — the remaining work is interactions (resultados de búsqueda) and whatever comes after the four cards.
@@ -49,7 +54,8 @@ typed) and is passed down to presentational components.
 | Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. One-way trips fade the return field out (width + opacity, 300ms) while the departure grows 160 → 332px. |
 | Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. Defaults: Escalas / Tipo de cabina / Equipaje start on their first `Cualquier…` option (checked, but the pill stays neutral — choosing it again clears the filter); Aerolíneas starts empty; Tiempos starts on Ida with both ranges at the full day (`12:00 am - 11:59 pm`). With a real selection the pill turns cyan (#D3F7FA), swaps the chevron for an X and shows a summary: one airline by name, two or more as `Avianca +1`. |
 | Promo + vuelos | Static for now: "Reserva ahora" and "Ver detalles" are real buttons with no action yet. Photos are local 2x exports (`public/images`). |
-| Buscar / loader | `Buscar` opens the 6739-4961 modal for 5.2s: scrim 60%, 414×251 card, trip type, origin/destination codes, dates, 5 rotating phrases (1.1s each), gradient progress bar with the plane at its tip, and the closing line. It needs origin + destination + departure date, otherwise the button is disabled. Escape or the 5.2s timer closes it. |
+| Buscar / loader | `Buscar` opens the 6739-4961 modal for 5.2s: scrim 60%, 414×251 card, trip type, origin/destination codes, dates, 5 rotating phrases (1.1s each), gradient progress bar with the plane at its tip, and the closing line. It needs origin + destination + departure date, otherwise the button is disabled. Escape or the 5.2s timer closes it. On completion it navigates to `/resultados` with the search in the URL. |
+| Resultados | `/resultados?trip=…&from=UIO&to=BOG&dep=2026-12-18&ret=…&adults=1` — the URL is the search state (direct links work, defaults match the Figma mock). Flight options are radios inside each block and can only be combined within the same block: picking a flight in another block starts a fresh combination with that block's first flight in the other direction. The chosen block gets the cyan `#73DFED` border and the sticky card follows the selection (price, airline, luggage, both flight times). `Buscar` in the left column rewrites the URL and resets to block 1. One-way hides the return column and the return row in the summary. Blocks collapse from their chevron. |
 
 ## Layout constants (desktop, from Figma)
 
