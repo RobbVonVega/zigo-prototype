@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   General Sans (self-hosted, Fontshare / Indian Type Foundry, free for
+   commercial use). Weights used in the ZIGO design: 400 / 500 / 600 / 700.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens extracted from the Figma file (ZIGO, node 6706-1260 and the
+   wider document). Sizes keep the design's line-heights and -4% tracking.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "General Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Brand + neutrals */
+  --color-brand: #ff3500;
+  --color-brand-hover: #ff4d1d;
+  --color-brand-soft: #ffe6d3;
+  --color-brand-tint: #ffefeb;
+  --color-ink: #1e1e1e;
+  --color-ink-alt: #272a3e;
+  --color-muted: #727272;
+  --color-line: #ececec;
+  --color-surface: #f0f0f0;
+  --color-panel: #fcfcfc;
+  --color-sidebar: #1e1e1e;
+  --color-sidebar-soft: #343330;
+
+  /* Accents */
+  --color-cyan-soft: #d3f7fa;
+  --color-cyan-600: #1689a4;
+  --color-cyan-400: #51cfe2;
+  --color-blue-600: #324ddd;
+
+  /* Type scale (size / line-height / tracking from Figma) */
+  --text-section: 33px;
+  --text-section--line-height: 41.25px;
+  --text-section--letter-spacing: -0.04em;
+  --text-h1: 32px;
+  --text-h1--line-height: 38.4px;
+  --text-h1--letter-spacing: -0.04em;
+  --text-h2: 28px;
+  --text-h2--line-height: 36px;
+  --text-h2--letter-spacing: -0.04em;
+  --text-h3: 23px;
+  --text-h3--line-height: 31px;
+  --text-h3--letter-spacing: -0.04em;
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 21.6px;
+  --text-body-lg--letter-spacing: -0.04em;
+  --text-body: 14px;
+  --text-body--line-height: 18.9px;
+  --text-body--letter-spacing: -0.04em;
+  --text-sm: 13px;
+  --text-sm--line-height: 17.55px;
+  --text-sm--letter-spacing: -0.04em;
+  --text-xs: 12px;
+  --text-xs--line-height: 14.4px;
+  --text-xs--letter-spacing: -0.04em;
+  --text-2xs: 11px;
+  --text-2xs--line-height: 13.2px;
+  --text-2xs--letter-spacing: -0.02em;
+
+  /* Radii */
+  --radius-control: 5px;
+  --radius-card: 10px;
+  --radius-pill: 100px;
+
+  /* Elevation */
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --shadow-pop: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-surface font-sans text-ink;
+  }
+
+  ::selection {
+    @apply bg-brand-soft text-ink;
+  }
+}
