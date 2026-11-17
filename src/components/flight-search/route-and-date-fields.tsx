@@ -76,7 +76,7 @@ export function RouteAndDateFields({
           label="Fecha de salida"
           value={departureDate}
           onChange={onDepartureChange}
-          className="w-40 shrink-0"
+          className={showReturnDate ? "w-40 shrink-0" : "w-[332px] shrink-0"}
         />
 
         {showReturnDate ? (

@@ -34,4 +34,7 @@ export type IconName =
   | "seat"
   | "suitcase"
   | "minus"
-  | "plus";
+  | "plus"
+  // Filters
+  | "check"
+  | "close";

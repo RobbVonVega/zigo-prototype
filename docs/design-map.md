@@ -23,6 +23,11 @@ Everything in this prototype traces back to a node in the ZIGO Figma file:
 | `6706-1411` | `RouteAndDateFields` | [route-and-date-fields.tsx](../src/components/flight-search/route-and-date-fields.tsx) |
 | `6706-1413` | `OriginDropdown` (also Destination / dates) | [airport-select.tsx](../src/components/flight-search/airport-select.tsx) · [date-field.tsx](../src/components/flight-search/date-field.tsx) |
 | `6706-1423` | `AdvancedFlightFilters` | [advanced-filters.tsx](../src/components/flight-search/advanced-filters.tsx) |
+| `6729-6109` | Menú Escalas | [filter-dropdown.tsx](../src/components/flight-search/filter-dropdown.tsx) · [filter-choice.tsx](../src/components/flight-search/filter-choice.tsx) |
+| `6729-6130` | Menú Aerolíneas (multi) | idem |
+| `6729-6384` | Menú Tipo de cabina | idem |
+| `6729-6448` | Menú Equipaje | idem |
+| `6729-6500` | Menú Tiempos de vuelo | [time-filter.tsx](../src/components/flight-search/time-filter.tsx) · [ui/range-slider.tsx](../src/components/ui/range-slider.tsx) |
 | — | Calendar (shadcn-style) | [ui/calendar.tsx](../src/components/ui/calendar.tsx) |
 
 Not built yet (next passes): `6706-1429` promo card, `6706-1452` flight cards.
@@ -35,10 +40,10 @@ typed) and is passed down to presentational components.
 | Control | Behaviour |
 | --- | --- |
 | Trip type toggle | Cyan = selected, light grey hover on the idle option. Choosing `Solo Ida` hides `Fecha de regreso` (the value is kept, just hidden). |
-| Passenger counters | `−` / `+` change one unit per click, clamped 0–9, disabled at the bounds. |
+| Passenger counters | `−` / `+` change one unit per click, clamped **1–9 for adults** and **0–9 for children/infants**; the minus disables at each floor. |
 | Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
-| Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. |
-| Advanced filters | Still static; menus come in a later pass. |
+| Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. On one-way trips the departure field grows to the width of both dates (332px). |
+| Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above: 8px radius, 16px title, 12px X, radio rows (Escalas, Tipo de cabina, Equipaje), checkboxes (Aerolíneas, scrolls at 200px) and `Borrar selección`. Tiempos de vuelo has Ida/Regreso tabs plus departure/arrival dual-thumb sliders with per-section `Borrar`. |
 
 ## Layout constants (desktop, from Figma)
 

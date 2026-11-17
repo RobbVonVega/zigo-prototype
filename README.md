@@ -20,9 +20,10 @@ cliente.
 | Toggle de tipo de viaje, contadores de pasajeros | Listo |
 | Buscador de aeropuertos (30 ciudades) | Listo |
 | Selector de fechas (calendario) | Listo |
+| Menús de filtros avanzados (5) | Listo |
 | Promo "Vuela a Bogotá" | Pendiente |
 | Tarjetas de próximos vuelos | Pendiente |
-| Menús de filtros avanzados, acción de "Buscar" | Pendiente |
+| Acción de "Buscar" (resultados) | Pendiente |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -59,10 +60,15 @@ src/
       select-field.tsx
       advanced-filters.tsx
       field-label.tsx
+      filter-dropdown.tsx
+      filter-choice.tsx
+      time-filter.tsx
     ui/
       calendar.tsx     # calendario shadcn-style con tokens ZIGO
+      range-slider.tsx # slider de dos pulgares (filtro de tiempos)
   hooks/
-    use-flight-search.ts # estado del formulario (toggle, pasajeros, rutas, fechas)
+    use-flight-search.ts  # estado del formulario (toggle, pasajeros, rutas, fechas)
+    use-flight-filters.ts # estado de los menús de filtros
   lib/
     flight-search.ts   # tipos + contenido de la pantalla (datos)
     icons.ts           # nombres de iconos disponibles

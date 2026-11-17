@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import { Icon } from "@/components/icon";
 import { cn } from "@/lib/cn";
 import { passengers, type PassengerId } from "@/lib/flight-search";
-import { PASSENGER_MAX, PASSENGER_MIN, type PassengerCounts } from "@/hooks/use-flight-search";
+import { PASSENGER_MAX, type PassengerCounts } from "@/hooks/use-flight-search";
 
 export type PassengerSelectorsProps = {
   counts: PassengerCounts;
@@ -21,7 +21,7 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
     <div className="flex h-8 items-center gap-3 px-[10px]">
       {passengers.map((passenger, index) => {
         const value = counts[passenger.id];
-        const canDecrease = value > PASSENGER_MIN;
+        const canDecrease = value > passenger.min;
         const canIncrease = value < PASSENGER_MAX;
 
         return (

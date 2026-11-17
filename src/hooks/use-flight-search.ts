@@ -2,22 +2,26 @@
 
 import { useState } from "react";
 
-import type { Airport } from "@/lib/airports";
 import {
+  PASSENGER_MAX,
   activeTripTypeId,
   passengers,
+  type PassengerCounts,
   type PassengerId,
   type TripTypeId,
 } from "@/lib/flight-search";
+import type { Airport } from "@/lib/airports";
 
-/** Passengers can be counted from 0 to 9 per category. */
-export const PASSENGER_MIN = 0;
-export const PASSENGER_MAX = 9;
-
-export type PassengerCounts = Record<PassengerId, number>;
+export { PASSENGER_MAX };
+export type { PassengerCounts };
 
 const initialCounts = Object.fromEntries(
   passengers.map((passenger) => [passenger.id, passenger.count]),
+) as PassengerCounts;
+
+/** Counter floor per passenger type: adults never drop below 1. */
+const minimums = Object.fromEntries(
+  passengers.map((passenger) => [passenger.id, passenger.min]),
 ) as PassengerCounts;
 
 /**
@@ -33,14 +37,11 @@ export function useFlightSearch() {
   const [departureDate, setDepartureDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
 
-  /** Clamps between the allowed passenger range. */
+  /** Steps one unit, clamped between the passenger's floor and 9. */
   function changePassenger(id: PassengerId, delta: 1 | -1) {
     setCounts((current) => ({
       ...current,
-      [id]: Math.min(
-        PASSENGER_MAX,
-        Math.max(PASSENGER_MIN, current[id] + delta),
-      ),
+      [id]: Math.min(PASSENGER_MAX, Math.max(minimums[id], current[id] + delta)),
     }));
   }
 
