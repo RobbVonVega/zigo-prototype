@@ -17,9 +17,12 @@ cliente.
 | Sidebar | Listo |
 | Top bar | Listo |
 | Búsqueda de vuelos + filtros avanzados | Listo |
+| Toggle de tipo de viaje, contadores de pasajeros | Listo |
+| Buscador de aeropuertos (30 ciudades) | Listo |
+| Selector de fechas (calendario) | Listo |
 | Promo "Vuela a Bogotá" | Pendiente |
 | Tarjetas de próximos vuelos | Pendiente |
-| Interacciones (dropdowns, contadores, navegación) | Pendiente, por partes |
+| Menús de filtros avanzados, acción de "Buscar" | Pendiente |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -51,11 +54,20 @@ src/
       trip-type-toggle.tsx
       passenger-selectors.tsx
       route-and-date-fields.tsx
+      airport-select.tsx
+      date-field.tsx
       select-field.tsx
       advanced-filters.tsx
+      field-label.tsx
+    ui/
+      calendar.tsx     # calendario shadcn-style con tokens ZIGO
+  hooks/
+    use-flight-search.ts # estado del formulario (toggle, pasajeros, rutas, fechas)
   lib/
     flight-search.ts   # tipos + contenido de la pantalla (datos)
     icons.ts           # nombres de iconos disponibles
+    airports.ts        # 30 aeropuertos de Latinoamérica (código IATA)
+    cn.ts              # helper de clases
     tokens.ts          # espejo JS de los tokens, para /styleguide
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)

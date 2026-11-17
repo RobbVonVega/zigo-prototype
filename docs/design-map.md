@@ -21,10 +21,24 @@ Everything in this prototype traces back to a node in the ZIGO Figma file:
 | `6706-1391` | `TripTypeSelector` | [trip-type-toggle.tsx](../src/components/flight-search/trip-type-toggle.tsx) |
 | `6706-1398` | `PassengerSelectors` | [passenger-selectors.tsx](../src/components/flight-search/passenger-selectors.tsx) |
 | `6706-1411` | `RouteAndDateFields` | [route-and-date-fields.tsx](../src/components/flight-search/route-and-date-fields.tsx) |
-| `6706-1413` | `OriginDropdown` (also Destination / dates) | [select-field.tsx](../src/components/flight-search/select-field.tsx) |
+| `6706-1413` | `OriginDropdown` (also Destination / dates) | [airport-select.tsx](../src/components/flight-search/airport-select.tsx) · [date-field.tsx](../src/components/flight-search/date-field.tsx) |
 | `6706-1423` | `AdvancedFlightFilters` | [advanced-filters.tsx](../src/components/flight-search/advanced-filters.tsx) |
+| — | Calendar (shadcn-style) | [ui/calendar.tsx](../src/components/ui/calendar.tsx) |
 
 Not built yet (next passes): `6706-1429` promo card, `6706-1452` flight cards.
+
+## Interactions implemented
+
+State lives in [use-flight-search.ts](../src/hooks/use-flight-search.ts) (one hook,
+typed) and is passed down to presentational components.
+
+| Control | Behaviour |
+| --- | --- |
+| Trip type toggle | Cyan = selected, light grey hover on the idle option. Choosing `Solo Ida` hides `Fecha de regreso` (the value is kept, just hidden). |
+| Passenger counters | `−` / `+` change one unit per click, clamped 0–9, disabled at the bounds. |
+| Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
+| Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. |
+| Advanced filters | Still static; menus come in a later pass. |
 
 ## Layout constants (desktop, from Figma)
 

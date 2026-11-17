@@ -1,53 +1,78 @@
+"use client";
+
 import { Fragment } from "react";
 
 import { Icon } from "@/components/icon";
-import { passengers } from "@/lib/flight-search";
+import { cn } from "@/lib/cn";
+import { passengers, type PassengerId } from "@/lib/flight-search";
+import { PASSENGER_MAX, PASSENGER_MIN, type PassengerCounts } from "@/hooks/use-flight-search";
+
+export type PassengerSelectorsProps = {
+  counts: PassengerCounts;
+  onChange: (id: PassengerId, delta: 1 | -1) => void;
+};
 
 /**
- * Passenger counters shown at rest (Figma node 6706-1398).
- * No wiring yet: the buttons exist so counters can be enabled later.
+ * Passenger counters (Figma node 6706-1398). Each click adds or removes one
+ * passenger, clamped between 0 and 9.
  */
-export function PassengerSelectors() {
+export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps) {
   return (
     <div className="flex h-8 items-center gap-3 px-[10px]">
-      {passengers.map((passenger, index) => (
-        <Fragment key={passenger.id}>
-          {index > 0 ? (
-            <span aria-hidden="true" className="h-[18px] w-px bg-line" />
-          ) : null}
+      {passengers.map((passenger, index) => {
+        const value = counts[passenger.id];
+        const canDecrease = value > PASSENGER_MIN;
+        const canIncrease = value < PASSENGER_MAX;
 
-          <div className="flex items-center gap-[10px]">
-            <span className="text-xs leading-[14.4px] font-semibold tracking-[-0.04em] text-ink">
-              {passenger.label}
-            </span>
+        return (
+          <Fragment key={passenger.id}>
+            {index > 0 ? (
+              <span aria-hidden="true" className="h-[18px] w-px bg-line" />
+            ) : null}
 
-            <div className="flex items-center gap-[5px]">
-              <button
-                type="button"
-                aria-label={`Quitar ${passenger.label.toLowerCase()}`}
-                className="grid size-[18px] place-items-center"
-              >
-                <Icon name="minus" className="size-[15px] text-ink" />
-              </button>
-
-              <span
-                aria-live="polite"
-                className="w-[18px] text-center text-base leading-[21.6px] font-semibold tracking-[-0.04em] text-ink"
-              >
-                {passenger.count}
+            <div className="flex items-center gap-[10px]">
+              <span className="text-xs leading-[14.4px] font-semibold tracking-[-0.04em] text-ink">
+                {passenger.label}
               </span>
 
-              <button
-                type="button"
-                aria-label={`Agregar ${passenger.label.toLowerCase()}`}
-                className="grid size-[18px] place-items-center"
-              >
-                <Icon name="plus" className="size-[15px] text-ink" />
-              </button>
+              <div className="flex items-center gap-[5px]">
+                <button
+                  type="button"
+                  aria-label={`Quitar ${passenger.label.toLowerCase()}`}
+                  disabled={!canDecrease}
+                  onClick={() => onChange(passenger.id, -1)}
+                  className={cn(
+                    "grid size-[18px] place-items-center rounded-full transition-opacity",
+                    canDecrease ? "hover:opacity-70" : "cursor-not-allowed opacity-30",
+                  )}
+                >
+                  <Icon name="minus" className="size-[15px] text-ink" />
+                </button>
+
+                <span
+                  aria-live="polite"
+                  className="w-[18px] text-center text-base leading-[21.6px] font-semibold tracking-[-0.04em] text-ink tabular-nums"
+                >
+                  {value}
+                </span>
+
+                <button
+                  type="button"
+                  aria-label={`Agregar ${passenger.label.toLowerCase()}`}
+                  disabled={!canIncrease}
+                  onClick={() => onChange(passenger.id, 1)}
+                  className={cn(
+                    "grid size-[18px] place-items-center rounded-full transition-opacity",
+                    canIncrease ? "hover:opacity-70" : "cursor-not-allowed opacity-30",
+                  )}
+                >
+                  <Icon name="plus" className="size-[15px] text-ink" />
+                </button>
+              </div>
             </div>
-          </div>
-        </Fragment>
-      ))}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
