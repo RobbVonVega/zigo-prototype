@@ -4,15 +4,45 @@ import { FilterChoice } from "./filter-choice";
 import { FilterDropdown } from "./filter-dropdown";
 import { TimeFilter } from "./time-filter";
 import { useFlightFilters } from "@/hooks/use-flight-filters";
-import { advancedFilters } from "@/lib/flight-search";
+import { advancedFilters, type AdvancedFilter } from "@/lib/flight-search";
+
+type SingleId = "stops" | "cabin" | "bags";
 
 /**
  * Secondary filters, right-aligned under the search panel (Figma node 6706-1423).
  * Each pill opens its menu from nodes 6729-6109 (Escalas), 6729-6130 (Aerolíneas),
  * 6729-6384 (Tipo de cabina), 6729-6448 (Equipaje) and 6729-6500 (Tiempos).
+ * Once a filter has a selection the pill turns cyan and shows a summary + X
+ * (node 6729-5960).
  */
 export function AdvancedFilters() {
   const filters = useFlightFilters();
+
+  /** "Avianca", "Avianca +1", "Sin escalas", … */
+  function summaryFor(filter: AdvancedFilter): string | null {
+    if (!filters.isActive(filter.id)) return null;
+
+    if (filter.kind === "multiple") {
+      const chosen =
+        filter.options?.filter((option) =>
+          filters.airlines.includes(option.id),
+        ) ?? [];
+      if (chosen.length === 0) return null;
+      return chosen.length === 1
+        ? chosen[0].label
+        : `${chosen[0].label} +${chosen.length - 1}`;
+    }
+
+    if (filter.kind === "single") {
+      const optionId = filters.single[filter.id as SingleId];
+      return (
+        filter.options?.find((option) => option.id === optionId)?.label ?? null
+      );
+    }
+
+    // The time filter has no compact summary in the design.
+    return filter.label;
+  }
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -32,7 +62,7 @@ export function AdvancedFilters() {
         const isMultiple = filter.kind === "multiple";
         const selected = isMultiple
           ? filters.airlines
-          : [filters.single[filter.id as "stops" | "cabin" | "bags"]];
+          : [filters.single[filter.id as SingleId]];
 
         return (
           <FilterDropdown
@@ -40,6 +70,7 @@ export function AdvancedFilters() {
             label={filter.label}
             title={filter.title}
             icon={filter.icon}
+            activeLabel={summaryFor(filter)}
             onClear={() => filters.clear(filter.id)}
           >
             <div
@@ -57,7 +88,7 @@ export function AdvancedFilters() {
                     isMultiple
                       ? filters.toggleAirline(option.id)
                       : filters.selectSingle(
-                          filter.id as "stops" | "cabin" | "bags",
+                          filter.id as SingleId,
                           option.id,
                         )
                   }

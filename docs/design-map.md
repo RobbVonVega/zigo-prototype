@@ -41,9 +41,9 @@ typed) and is passed down to presentational components.
 | --- | --- |
 | Trip type toggle | Cyan = selected, light grey hover on the idle option. Choosing `Solo Ida` hides `Fecha de regreso` (the value is kept, just hidden). |
 | Passenger counters | `−` / `+` change one unit per click, clamped **1–9 for adults** and **0–9 for children/infants**; the minus disables at each floor. |
-| Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
-| Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. On one-way trips the departure field grows to the width of both dates (332px). |
-| Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above: 8px radius, 16px title, 12px X, radio rows (Escalas, Tipo de cabina, Equipaje), checkboxes (Aerolíneas, scrolls at 200px) and `Borrar selección`. Tiempos de vuelo has Ida/Regreso tabs plus departure/arrival dual-thumb sliders with per-section `Borrar`. |
+| Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): the list matches the field width and any click on the field focuses + opens it; filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
+| Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. One-way trips fade the return field out (width + opacity, 300ms) while the departure grows 160 → 332px. |
+| Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. With a selection the pill turns cyan (#D3F7FA), swaps the chevron for an X, and shows a summary: one airline by name, two or more as `Avianca +1`. X or `Borrar selección` resets it. Tiempos de vuelo keeps its label but gets the same active treatment. |
 
 ## Layout constants (desktop, from Figma)
 

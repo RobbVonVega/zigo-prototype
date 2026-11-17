@@ -3,6 +3,7 @@
 import { AirportSelect } from "./airport-select";
 import { DateField } from "./date-field";
 import { Icon } from "@/components/icon";
+import { cn } from "@/lib/cn";
 import { routeFields } from "@/lib/flight-search";
 import type { Airport } from "@/lib/airports";
 
@@ -25,6 +26,9 @@ export type RouteAndDateFieldsProps = {
  * In Figma origin/destination are 244px each and dates 160px each; the route
  * group flexes so the row fills any desktop width, while the dates + CTA keep
  * their design size and wrap as a unit on narrower desktops.
+ *
+ * One-way trips hide the return field with a fade/size transition: the return
+ * collapses to 0 and the departure grows from 160 to 332 (both dates + gap).
  */
 export function RouteAndDateFields({
   origin,
@@ -71,27 +75,39 @@ export function RouteAndDateFields({
         />
       </div>
 
-      <div className="ml-auto flex flex-wrap items-end gap-3">
+      <div className="ml-auto flex items-end">
         <DateField
           label="Fecha de salida"
           value={departureDate}
           onChange={onDepartureChange}
-          className={showReturnDate ? "w-40 shrink-0" : "w-[332px] shrink-0"}
+          className={cn(
+            "shrink-0 overflow-hidden transition-[width] duration-300 ease-out",
+            showReturnDate ? "w-40" : "w-[332px]",
+          )}
         />
 
-        {showReturnDate ? (
+        <div
+          aria-hidden={!showReturnDate}
+          inert={!showReturnDate}
+          className={cn(
+            "shrink-0 overflow-hidden transition-[width,opacity,margin] duration-300 ease-out",
+            showReturnDate
+              ? "ml-3 w-40 opacity-100"
+              : "pointer-events-none ml-0 w-0 opacity-0",
+          )}
+        >
           <DateField
             label="Fecha de regreso"
             value={returnDate}
             onChange={onReturnChange}
             minDate={departureDate}
-            className="w-40 shrink-0"
+            className="w-40"
           />
-        ) : null}
+        </div>
 
         <button
           type="button"
-          className="flex h-[30px] w-[131px] shrink-0 items-center justify-center gap-1 rounded-[4px] bg-brand px-5 py-2 text-xs leading-3 font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover"
+          className="ml-3 flex h-[30px] w-[131px] shrink-0 items-center justify-center gap-1 rounded-[4px] bg-brand px-5 py-2 text-xs leading-3 font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover"
         >
           Buscar
         </button>

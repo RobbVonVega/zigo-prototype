@@ -13,6 +13,7 @@ import type {
   TimeWindow,
   TimeWindows,
 } from "@/hooks/use-flight-filters";
+import { DEFAULT_TIME_WINDOW } from "@/hooks/use-flight-filters";
 
 const MINUTES_IN_DAY = 24 * 60 - 1;
 
@@ -92,11 +93,20 @@ export function TimeFilter({
   const [tab, setTab] = useState<TimeTab>("outbound");
   const current = times[tab];
 
+  const isActive = Object.values(times).some((tabTimes) =>
+    Object.values(tabTimes).some(
+      (window) =>
+        window.start !== DEFAULT_TIME_WINDOW.start ||
+        window.end !== DEFAULT_TIME_WINDOW.end,
+    ),
+  );
+
   return (
     <FilterDropdown
       label="Rango de salida y regreso"
       title="Tiempos de vuelo"
       icon="clock"
+      activeLabel={isActive ? "Rango de salida y regreso" : null}
       onClear={onClear}
       bodyClassName="gap-6"
     >

@@ -42,8 +42,8 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
                   disabled={!canDecrease}
                   onClick={() => onChange(passenger.id, -1)}
                   className={cn(
-                    "grid size-[18px] place-items-center rounded-full transition-opacity",
-                    canDecrease ? "hover:opacity-70" : "cursor-not-allowed opacity-30",
+                    "grid size-[18px] place-items-center rounded-full transition-colors",
+                    canDecrease ? "hover:bg-surface" : "cursor-not-allowed opacity-30",
                   )}
                 >
                   <Icon name="minus" className="size-[15px] text-ink" />
@@ -62,8 +62,8 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
                   disabled={!canIncrease}
                   onClick={() => onChange(passenger.id, 1)}
                   className={cn(
-                    "grid size-[18px] place-items-center rounded-full transition-opacity",
-                    canIncrease ? "hover:opacity-70" : "cursor-not-allowed opacity-30",
+                    "grid size-[18px] place-items-center rounded-full transition-colors",
+                    canIncrease ? "hover:bg-surface" : "cursor-not-allowed opacity-30",
                   )}
                 >
                   <Icon name="plus" className="size-[15px] text-ink" />

@@ -18,7 +18,8 @@ export type AirportSelectProps = {
 /**
  * Searchable origin/destination field. Keeps the design's 30px bar and opens a
  * listbox of Latin American airports (30 cities) filtered by city, country or
- * IATA code while typing.
+ * IATA code while typing. Clicking anywhere on the bar focuses the input and
+ * opens the list; the list matches the bar's width.
  */
 export function AirportSelect({
   label,
@@ -63,7 +64,10 @@ export function AirportSelect({
       <FieldLabel>{label}</FieldLabel>
 
       <div className="relative">
-        <div className="flex h-[30px] items-center gap-[6px] rounded-control border border-line bg-surface pr-[6px] pl-[10px] transition-colors focus-within:border-ink/40 hover:border-ink/20">
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className="flex h-[30px] cursor-text items-center gap-[6px] rounded-control border border-line bg-surface pr-[6px] pl-[10px] transition-colors focus-within:border-ink/40 hover:border-ink/20"
+        >
           <Icon name={icon} className="size-4 shrink-0 text-ink" />
 
           <input
@@ -128,7 +132,7 @@ export function AirportSelect({
             role="listbox"
             aria-label={label}
             onMouseDown={(event) => event.preventDefault()}
-            className="absolute left-0 top-[calc(100%+4px)] z-40 max-h-[264px] w-[280px] max-w-[calc(100vw-48px)] overflow-y-auto rounded-card bg-white p-1 shadow-pop ring-1 ring-line"
+            className="absolute inset-x-0 top-[calc(100%+4px)] z-40 max-h-[264px] overflow-y-auto rounded-card bg-white p-1 shadow-pop ring-1 ring-line"
           >
             {results.length === 0 ? (
               <li className="px-3 py-6 text-center text-xs font-medium text-muted">
