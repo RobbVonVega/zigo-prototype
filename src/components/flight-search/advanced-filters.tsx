@@ -56,7 +56,7 @@ export function AdvancedFilters() {
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
+    <div className="flex flex-wrap items-center justify-start gap-2">
       {advancedFilters.map((filter) => {
         if (filter.kind === "time") {
           return (

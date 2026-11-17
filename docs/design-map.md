@@ -57,7 +57,7 @@ typed) and is passed down to presentational components.
 | Panel | 10px radius, 16px padding, 16px inner gap, 1px `#ECECEC` inset ring |
 | Fields | 30px tall, 5px radius, 1px `#ECECEC` border, `10px/6px` padding, 6px gap |
 | Field label | 12px/9px semibold, 6px gap → 45px field column |
-| Filters | 30px tall, white, right-aligned, 8px gap |
+| Filters | 30px tall, white, left-aligned under the panel, 8px gap |
 
 ## Assets
 
