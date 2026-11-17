@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { AppShell } from "@/components/app-shell";
 import { AdvancedFilters } from "@/components/flight-search/advanced-filters";
@@ -19,6 +19,7 @@ import { TripSummaryCard } from "./trip-summary-card";
 import { useFlightFilters } from "@/hooks/use-flight-filters";
 import { useFlightSearch } from "@/hooks/use-flight-search";
 import { cn } from "@/lib/cn";
+import { filterBlocks } from "@/lib/filter-results";
 import { priceBlocks } from "@/lib/results";
 import {
   buildResultsUrl,
@@ -82,14 +83,48 @@ export function ResultsView() {
     : "—";
   const returnLabel = search.returnDate ? formatDayMonth(search.returnDate) : "—";
 
+  // Filters apply instantly to the mock itineraries.
+  const filteredBlocks = filterBlocks(priceBlocks, {
+    airlines: filters.airlines,
+    stops: filters.single.stops,
+    cabin: filters.single.cabin,
+    bags: filters.single.bags,
+    time: filters.times,
+  });
+
   const selectedBlock =
-    priceBlocks.find((block) => block.id === selection?.blockId) ?? null;
+    filteredBlocks.find((block) => block.id === selection?.blockId) ?? null;
   const selectedOutbound = selectedBlock?.outbound.find(
     (flight) => flight.id === selection?.outboundId,
   );
   const selectedReturning = selectedBlock?.returning.find(
     (flight) => flight.id === selection?.returnId,
   );
+
+  // The query in the URL always mirrors the form, no submit required.
+  const syncedUrl = useRef<string | null>(null);
+  useEffect(() => {
+    const url = buildResultsUrl({
+      tripType: search.tripType,
+      origin: search.origin,
+      destination: search.destination,
+      departureDate: search.departureDate,
+      returnDate: search.returnDate,
+      counts: search.counts,
+    });
+
+    if (syncedUrl.current === url) return;
+    syncedUrl.current = url;
+    router.replace(url, { scroll: false });
+  }, [
+    search.tripType,
+    search.origin,
+    search.destination,
+    search.departureDate,
+    search.returnDate,
+    search.counts,
+    router,
+  ]);
 
   function selectFlight(
     blockId: string,
@@ -179,14 +214,39 @@ export function ResultsView() {
     />
   );
 
-  const blocks = (
+  function clearFilters() {
+    filters.clear("airlines");
+    filters.clear("stops");
+    filters.clear("cabin");
+    filters.clear("bags");
+    filters.clear("time");
+  }
+
+  const blocks =
+    filteredBlocks.length === 0 ? (
+      <div className="rounded-card border border-line bg-white px-6 py-10 text-center">
+        <p className="text-body-lg font-semibold text-ink">
+          No encontramos vuelos con estos filtros
+        </p>
+        <p className="mt-1 text-xs font-medium text-muted">
+          Ajusta las aerolíneas, escalas o equipaje para ver más opciones.
+        </p>
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="mt-4 rounded-[4px] border border-ink px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-surface"
+        >
+          Borrar filtros
+        </button>
+      </div>
+    ) : (
     <div
       className={cn(
         "flex flex-col",
         layout === "standard" ? "gap-4" : "gap-2",
       )}
     >
-      {priceBlocks.map((block) => (
+      {filteredBlocks.map((block) => (
         <FlightPriceBlock
           key={block.id}
           block={block}
@@ -211,7 +271,7 @@ export function ResultsView() {
         />
       ))}
     </div>
-  );
+    );
 
   const summaryCard = (
     <TripSummaryCard
@@ -250,34 +310,39 @@ export function ResultsView() {
           onToggleEdit={() => setEditOpen((value) => !value)}
         />
 
-        {editOpen ? (
-          <CompactSearchEditor
-            search={search}
-            onSearch={() => {
-              handleSearch();
-              setEditOpen(false);
-            }}
-          />
-        ) : null}
+        <div className="relative">
+          <div className="px-20 pt-4">
+            <div className="flex items-start gap-2">
+              <AdvancedFilters filters={filters} variant="rail" />
 
-        <div className="relative px-20 pt-4">
-          <div className="flex items-start gap-2">
-            <AdvancedFilters filters={filters} variant="rail" />
+              <div className="min-w-0 flex-1">{blocks}</div>
 
-            <div className="min-w-0 flex-1">{blocks}</div>
-
-            <div className="sticky top-4 hidden w-[284px] shrink-0 min-[1400px]:block">
-              {summaryCard}
+              <div className="sticky top-4 hidden w-[284px] shrink-0 min-[1400px]:block">
+                {summaryCard}
+              </div>
             </div>
           </div>
 
           {editOpen ? (
-            <button
-              type="button"
-              aria-label="Cerrar edición de búsqueda"
-              onClick={() => setEditOpen(false)}
-              className="absolute inset-0 z-10 cursor-default bg-black/20"
-            />
+            <>
+              <button
+                type="button"
+                aria-label="Cerrar edición de búsqueda"
+                onClick={() => setEditOpen(false)}
+                className="absolute inset-0 z-10 cursor-default bg-black/20"
+              />
+
+              {/* Floats over the results instead of pushing them down. */}
+              <div className="absolute inset-x-0 top-0 z-20 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)]">
+                <CompactSearchEditor
+                  search={search}
+                  onSearch={() => {
+                    handleSearch();
+                    setEditOpen(false);
+                  }}
+                />
+              </div>
+            </>
           ) : null}
         </div>
 

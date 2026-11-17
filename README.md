@@ -41,7 +41,7 @@ buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
 | `/resultados` | Resultados con panel de búsqueda, filtros, 5 bloques de precio y resumen sticky |
 | `/styleguide` | Referencia interna de tokens |
 
-La búsqueda viaja por la URL (`/resultados?trip=round-trip&from=UIO&to=BOG&dep=…`), así que un enlace directo funciona y el botón `Buscar` de resultados la reescribe.
+La búsqueda viaja por la URL (`/resultados?trip=round-trip&from=UIO&to=BOG&dep=…`), así que un enlace directo funciona y la URL se actualiza en vivo con cada cambio del formulario. Los filtros avanzados filtran los itinerarios mock al instante (aerolínea, escalas, cabina, equipaje, horarios y escalas), sin botón de búsqueda; si nada coincide se muestra un estado vacío con `Borrar filtros`.
 
 ## Cómo correrlo
 

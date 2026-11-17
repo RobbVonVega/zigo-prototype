@@ -20,10 +20,14 @@ export type FlightOption = {
 
 export type LuggageType = "mochila" | "mano" | "facturado";
 
+export type CabinClass = "economy" | "premium-economy" | "business";
+
 export type PriceBlock = {
   id: string;
   airline: { name: string; logo: string };
   luggage: { type: LuggageType; label: string };
+  /** Used by the "Tipo de cabina" filter. */
+  cabin: CabinClass;
   /** Total in COP (no decimals). */
   price: number;
   /** "4 idas ⋅ 3 regresos ⋅ Todos directos" */
@@ -86,6 +90,7 @@ export const priceBlocks: readonly PriceBlock[] = [
     id: "block-1",
     airline: latam,
     luggage: { type: "mochila", label: "Solo mochila" },
+    cabin: "economy",
     price: 1658018,
     summary: "4 idas ⋅ 3 regresos ⋅ Todos directos",
     outbound: [
@@ -104,6 +109,7 @@ export const priceBlocks: readonly PriceBlock[] = [
     id: "block-2",
     airline: avianca,
     luggage: { type: "mano", label: "Mochila + De mano" },
+    cabin: "economy",
     price: 1942120,
     summary: "4 idas ⋅ 7 regresos ⋅ Regresos con escala",
     outbound: [
@@ -126,6 +132,7 @@ export const priceBlocks: readonly PriceBlock[] = [
     id: "block-3",
     airline: latam,
     luggage: { type: "mochila", label: "Solo mochila" },
+    cabin: "economy",
     price: 1658018,
     summary: "4 idas ⋅ 3 regresos ⋅ Todos directos",
     outbound: [
@@ -144,6 +151,7 @@ export const priceBlocks: readonly PriceBlock[] = [
     id: "block-4",
     airline: copa,
     luggage: { type: "facturado", label: "Mochila + De mano + Facturado" },
+    cabin: "business",
     price: 2210450,
     summary: "3 idas ⋅ 5 regresos ⋅ Ida con escala",
     outbound: [
@@ -163,6 +171,7 @@ export const priceBlocks: readonly PriceBlock[] = [
     id: "block-5",
     airline: jetsmart,
     luggage: { type: "mochila", label: "Solo mochila" },
+    cabin: "economy",
     price: 1480900,
     summary: "2 idas ⋅ 4 regresos ⋅ Todos directos",
     outbound: [

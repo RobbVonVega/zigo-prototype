@@ -3,6 +3,7 @@ import { Icon, type IconName } from "@/components/icon";
 type NavItem = {
   label: string;
   icon: IconName;
+  href?: string;
   active?: boolean;
   badge?: string;
   expandable?: boolean;
@@ -11,7 +12,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Inicio", icon: "nav-inicio" },
   { label: "Reservas", icon: "nav-reservas" },
-  { label: "Vuelos", icon: "nav-vuelos", active: true },
+  { label: "Vuelos", icon: "nav-vuelos", href: "/", active: true },
   { label: "Disponibilidad", icon: "nav-disponibilidad", badge: "New" },
   { label: "Auditoría de Reservas", icon: "nav-auditoria" },
   { label: "Establecimientos", icon: "nav-establecimientos" },
@@ -52,7 +53,7 @@ export function Sidebar() {
           {navItems.map((item) => (
             <li key={item.label}>
               <a
-                href="#"
+                href={item.href ?? "#"}
                 aria-current={item.active ? "page" : undefined}
                 className={`flex h-9 items-center gap-2 rounded-[6px] px-2 text-[13px] leading-5 font-semibold whitespace-nowrap ${
                   item.active ? "bg-white/5 text-[#EDEDED]" : "text-white/60"
