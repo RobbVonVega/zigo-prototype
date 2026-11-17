@@ -34,7 +34,7 @@ export function FlightOptionRow({
         ) : null}
       </span>
 
-      <span className="flex shrink-0 items-center gap-2">
+      <span className="flex w-[92px] shrink-0 items-center gap-2">
         <span className="text-xs leading-[14.4px] font-semibold tabular-nums text-ink">
           {flight.departure}
         </span>

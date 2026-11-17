@@ -23,7 +23,7 @@ export function ResultsSearchPanel({
   );
 
   return (
-    <aside className="flex w-[240px] shrink-0 flex-col gap-4">
+    <aside className="sticky top-4 flex w-[240px] shrink-0 flex-col gap-4 self-start">
       <TripTypeToggle
         fullWidth
         value={search.tripType}

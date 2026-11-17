@@ -20,7 +20,7 @@ const LUGGAGE_SIZES: readonly [number, number][] = [
 
 function LuggageIcons({ type }: { type: LuggageType }) {
   return (
-    <span className="flex items-center gap-[2px]">
+    <span className="flex items-end gap-[2px]">
       {luggageFlags(type).map((included, index) => (
         <span
           key={index}

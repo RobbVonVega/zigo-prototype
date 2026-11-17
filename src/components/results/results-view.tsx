@@ -25,16 +25,6 @@ type Selection = {
   returnId?: string;
 };
 
-/** Block 1 with its first outbound/return, as in the design. */
-function defaultSelection(showReturn: boolean): Selection {
-  const block = priceBlocks[0];
-  return {
-    blockId: block.id,
-    outboundId: block.outbound[0]?.id,
-    returnId: showReturn ? block.returning[0]?.id : undefined,
-  };
-}
-
 /**
  * Results screen (Figma 6724-5421): narrow search column on the left, filters
  * and price blocks on the right, sticky trip summary. Flights can only be
@@ -58,9 +48,8 @@ export function ResultsView() {
     returnDate: initial.returnDate,
   });
 
-  const [selection, setSelection] = useState<Selection>(() =>
-    defaultSelection(initial.tripType === "round-trip"),
-  );
+  // Nothing is selected on arrival: the summary starts without a total.
+  const [selection, setSelection] = useState<Selection | null>(null);
 
   const originCode = search.origin?.code ?? "UIO";
   const destinationCode = search.destination?.code ?? "BOG";
@@ -70,12 +59,12 @@ export function ResultsView() {
   const returnLabel = search.returnDate ? formatDayMonth(search.returnDate) : "—";
 
   const selectedBlock =
-    priceBlocks.find((block) => block.id === selection.blockId) ?? null;
+    priceBlocks.find((block) => block.id === selection?.blockId) ?? null;
   const selectedOutbound = selectedBlock?.outbound.find(
-    (flight) => flight.id === selection.outboundId,
+    (flight) => flight.id === selection?.outboundId,
   );
   const selectedReturning = selectedBlock?.returning.find(
-    (flight) => flight.id === selection.returnId,
+    (flight) => flight.id === selection?.returnId,
   );
 
   function selectFlight(
@@ -122,7 +111,7 @@ export function ResultsView() {
         counts: search.counts,
       }),
     );
-    setSelection(defaultSelection(search.isRoundTrip));
+    setSelection(null);
   }
 
   return (
@@ -146,14 +135,14 @@ export function ResultsView() {
                     <FlightPriceBlock
                       key={block.id}
                       block={block}
-                      selected={block.id === selection.blockId}
+                      selected={block.id === selection?.blockId}
                       selectedOutboundId={
-                        block.id === selection.blockId
+                        block.id === selection?.blockId
                           ? selection.outboundId
                           : undefined
                       }
                       selectedReturnId={
-                        block.id === selection.blockId
+                        block.id === selection?.blockId
                           ? selection.returnId
                           : undefined
                       }
