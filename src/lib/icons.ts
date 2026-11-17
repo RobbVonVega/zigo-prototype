@@ -37,4 +37,7 @@ export type IconName =
   | "plus"
   // Filters
   | "check"
-  | "close";
+  | "close"
+  // Promo + flight cards
+  | "info"
+  | "copy";

@@ -43,10 +43,12 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
                   onClick={() => onChange(passenger.id, -1)}
                   className={cn(
                     "grid size-[18px] place-items-center rounded-full transition-colors",
-                    canDecrease ? "hover:bg-surface" : "cursor-not-allowed opacity-30",
+                    canDecrease
+                      ? "text-ink/30 hover:text-ink/50"
+                      : "cursor-not-allowed text-ink/20",
                   )}
                 >
-                  <Icon name="minus" className="size-[15px] text-ink" />
+                  <Icon name="minus" className="size-[15px]" />
                 </button>
 
                 <span
@@ -62,11 +64,13 @@ export function PassengerSelectors({ counts, onChange }: PassengerSelectorsProps
                   disabled={!canIncrease}
                   onClick={() => onChange(passenger.id, 1)}
                   className={cn(
-                    "grid size-[18px] place-items-center rounded-full transition-colors",
-                    canIncrease ? "hover:bg-surface" : "cursor-not-allowed opacity-30",
+                    "grid size-[18px] place-items-center rounded-full text-ink transition-colors",
+                    canIncrease
+                      ? "hover:text-ink/70"
+                      : "cursor-not-allowed text-ink/20",
                   )}
                 >
-                  <Icon name="plus" className="size-[15px] text-ink" />
+                  <Icon name="plus" className="size-[15px]" />
                 </button>
               </div>
             </div>

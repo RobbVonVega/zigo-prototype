@@ -15,7 +15,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <TopBar />
 
         <main className="flex-1 overflow-y-auto bg-white">
-          <div className="px-8 py-6 xl:px-20 xl:py-8">{children}</div>
+          <div className="px-8 py-6 xl:px-20 xl:py-8">
+            {/* Figma caps the content inside the frame at 1040px. */}
+            <div className="mx-auto w-full max-w-[1040px]">{children}</div>
+          </div>
         </main>
       </div>
     </div>

@@ -28,9 +28,12 @@ Everything in this prototype traces back to a node in the ZIGO Figma file:
 | `6729-6384` | Menú Tipo de cabina | idem |
 | `6729-6448` | Menú Equipaje | idem |
 | `6729-6500` | Menú Tiempos de vuelo | [time-filter.tsx](../src/components/flight-search/time-filter.tsx) · [ui/range-slider.tsx](../src/components/ui/range-slider.tsx) |
+| `6706-1429` | Promo "Vuela a Bogotá" | [promo-banner.tsx](../src/components/promo-banner.tsx) |
+| `6706-1447` | "Tus próximos vuelos" + grid | [upcoming-flights.tsx](../src/components/upcoming-flights.tsx) |
+| `6725-9043` | Flight reservation card | [flight-card.tsx](../src/components/flight-card.tsx) |
 | — | Calendar (shadcn-style) | [ui/calendar.tsx](../src/components/ui/calendar.tsx) |
 
-Not built yet (next passes): `6706-1429` promo card, `6706-1452` flight cards.
+Not built yet (next passes): none of the Flight with Ads frame — the remaining work is interactions (resultados de búsqueda) and whatever comes after the four cards.
 
 ## Interactions implemented
 
@@ -44,6 +47,7 @@ typed) and is passed down to presentational components.
 | Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): the list matches the field width and any click on the field focuses + opens it; filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
 | Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. One-way trips fade the return field out (width + opacity, 300ms) while the departure grows 160 → 332px. |
 | Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. Defaults: Escalas / Tipo de cabina / Equipaje start on their first `Cualquier…` option (checked, but the pill stays neutral — choosing it again clears the filter); Aerolíneas starts empty; Tiempos starts on Ida with both ranges at the full day (`12:00 am - 11:59 pm`). With a real selection the pill turns cyan (#D3F7FA), swaps the chevron for an X and shows a summary: one airline by name, two or more as `Avianca +1`. |
+| Promo + vuelos | Static for now: "Reserva ahora" and "Ver detalles" are real buttons with no action yet. Photos are local 2x exports (`public/images`). |
 
 ## Layout constants (desktop, from Figma)
 
@@ -53,7 +57,8 @@ typed) and is passed down to presentational components.
 | Top bar | 56px tall, `#F0F0F0`, 32px/12px padding |
 | Main separator | 1px `#1E1E1E` at 7% |
 | Content padding | 80px sides / 32px top-bottom at 1440 → `xl:px-20 xl:py-8`; 32/24 below |
-| Section gap | 24px (title → panel) |
+| Content max width | 1040px, centred (`app-shell.tsx`) |
+| Section gap | 32px between blocks, 24px inside the flight-search section |
 | Panel | 10px radius, 16px padding, 16px inner gap, 1px `#ECECEC` inset ring |
 | Fields | 30px tall, 5px radius, 1px `#ECECEC` border, `10px/6px` padding, 6px gap |
 | Field label | 12px/9px semibold, 6px gap → 45px field column |

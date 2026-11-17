@@ -21,9 +21,10 @@ cliente.
 | Buscador de aeropuertos (30 ciudades) | Listo |
 | Selector de fechas (calendario) | Listo |
 | Menús de filtros avanzados (5) | Listo |
-| Promo "Vuela a Bogotá" | Pendiente |
-| Tarjetas de próximos vuelos | Pendiente |
+| Promo "Vuela a Bogotá" | Listo |
+| Tarjetas de próximos vuelos | Listo |
 | Acción de "Buscar" (resultados) | Pendiente |
+| Contenido con ancho máximo de 1040px | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -50,6 +51,9 @@ src/
     sidebar.tsx        # navegación lateral
     top-bar.tsx        # header de 56px
     icon.tsx           # iconos SVG con mask + currentColor
+    promo-banner.tsx   # banner "Vuela a Bogotá"
+    upcoming-flights.tsx # "Tus próximos vuelos" + grilla
+    flight-card.tsx    # tarjeta de vuelo
     flight-search/
       flight-search-section.tsx
       trip-type-toggle.tsx
@@ -75,6 +79,7 @@ src/
     airports.ts        # 30 aeropuertos de Latinoamérica (código IATA)
     cn.ts              # helper de clases
     tokens.ts          # espejo JS de los tokens, para /styleguide
+    upcoming-flights.ts # datos de la promo y de las 4 tarjetas
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)
