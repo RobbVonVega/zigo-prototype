@@ -5,20 +5,24 @@ partir del archivo de Figma del proyecto y publicado en Vercel para revisión de
 cliente.
 
 - **Diseño:** [ZIGO en Figma](https://www.figma.com/design/xbeDUwzlaw5EIddm7bhsbM/ZIGO?node-id=6706-1260)
-- **Producción:** _pendiente de la primera publicación_
+- **Producción:** [zigo-prototype.vercel.app](https://zigo-prototype.vercel.app)
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4
+- **Mapa Figma → código:** [docs/design-map.md](docs/design-map.md)
 
 ## Estado
 
-| Fase | Estado |
+| Bloque | Estado |
 | --- | --- |
 | Repositorio, tipografías y tokens de diseño | Listo |
-| Dirección de diseño con el cliente | En revisión |
-| Pantallas del flujo de vuelos | Pendiente |
-| Publicación en Vercel | Primera versión lista |
+| Sidebar | Listo |
+| Top bar | Listo |
+| Búsqueda de vuelos + filtros avanzados | Listo |
+| Promo "Vuela a Bogotá" | Pendiente |
+| Tarjetas de próximos vuelos | Pendiente |
+| Interacciones (dropdowns, contadores, navegación) | Pendiente, por partes |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
-buscadores.
+buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
 
 ## Cómo correrlo
 
@@ -35,35 +39,44 @@ src/
   app/
     globals.css        # tokens de diseño (color, tipo, radios, sombras)
     layout.tsx         # fuentes, metadata
-    page.tsx           # portada provisional
+    page.tsx           # pantalla de vuelos (solo composición)
     styleguide/        # referencia interna de tokens y componentes base
+  components/
+    app-shell.tsx      # sidebar + top bar + área de contenido
+    sidebar.tsx        # navegación lateral
+    top-bar.tsx        # header de 56px
+    icon.tsx           # iconos SVG con mask + currentColor
+    flight-search/
+      flight-search-section.tsx
+      trip-type-toggle.tsx
+      passenger-selectors.tsx
+      route-and-date-fields.tsx
+      select-field.tsx
+      advanced-filters.tsx
   lib/
-    tokens.ts          # espejo JS de los tokens, para la página de referencia
+    flight-search.ts   # tipos + contenido de la pantalla (datos)
+    icons.ts           # nombres de iconos disponibles
+    tokens.ts          # espejo JS de los tokens, para /styleguide
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)
+  icons/               # iconos SVG exportados de Figma
+  images/              # fotos y avatar exportados de Figma
+docs/
+  design-map.md        # nodo de Figma → archivo, medidas y convenciones
 ```
 
-## Tokens
+## Diseño
 
-Extraídos del archivo de Figma (página `Vuelos`, frame `Flight with Ads`,
-`6706-1260`) y del resto del documento:
-
-- **Naranja de marca** `#FF3500` (`bg-brand`), hover `#FF4D1D`.
-- **Tinta** `#1E1E1E` para texto y sidebar, gris `#727272` para labels.
-- **Superficies** `#F0F0F0` / `#FCFCFC`, bordes `#ECECEC`.
-- **Tipografía** General Sans (400/500/600/700), tracking `-0.04em` y escala
+- Naranja de marca `#FF3500` (`bg-brand`), hover `#FF4D1D`.
+- Tinta `#1E1E1E`, gris `#727272`, superficies `#F0F0F0` / `#FCFCFC`, bordes `#ECECEC`.
+- General Sans (400/500/600/700), tracking `-0.04em`, escala
   `33 / 32 / 28 / 23 / 16 / 14 / 13 / 12 / 11`.
-- **Radios** 5 px (controles), 10 px (tarjetas), 100 px (pills).
+- Radios 5 px (controles), 10 px (tarjetas), 100 px (pills).
 
-Cualquier cambio de diseño debe entrar primero acá para que todas las pantallas
-queden consistentes. La referencia viva está en `/styleguide`.
-
-## Flujo a prototipar
-
-Alcance acordado: el flujo enlazado de Figma (búsqueda de vuelos y sus pasos
-inmediatos), con UI clickeable y datos mock. Sin backend.
+Referencia viva de tokens y componentes base: `/styleguide`.
 
 ## Publicación
 
-Vercel despliega desde `main`. Cada push a una rama genera un preview URL.
+Vercel despliega desde `main` (auto-deploy en cada push). Cada rama genera un
+preview URL.
