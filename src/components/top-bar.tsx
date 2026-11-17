@@ -4,7 +4,7 @@ import { Icon } from "@/components/icon";
  * Global app header (Figma node 6706-1369): menu + global search on the left,
  * notifications and profile on the right. 56px tall, #F0F0F0 background.
  */
-export function TopBar() {
+export function TopBar({ extra }: { extra?: React.ReactNode }) {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-2 bg-surface px-8">
       <div className="flex items-center gap-2">
@@ -23,6 +23,8 @@ export function TopBar() {
         >
           <Icon name="search" className="size-5 text-ink" />
         </button>
+
+        {extra}
       </div>
 
       <div className="flex items-center">

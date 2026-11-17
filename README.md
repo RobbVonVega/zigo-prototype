@@ -28,6 +28,7 @@ cliente.
 | Loader al buscar (6739-4961) | Listo |
 | Pantalla de resultados (6724-5421) | Listo |
 | Detalle de vuelo en drawer (6741-11055 / 6740-9495) | Listo |
+| Layout compacto de resultados (6729-3375 / 6733-4512) | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -74,6 +75,9 @@ src/
       flight-option-row.tsx   # fila de vuelo (radio, horario, escalas)
       trip-summary-card.tsx   # resumen sticky "Detalle de tu viaje"
       flight-details-drawer.tsx # drawer "Detalles del vuelo" (con tabs)
+      layout-toggle.tsx        # toggle Estándar / Compact en el top bar
+      compact-query-bar.tsx    # barra compacta con datos + Editar
+      compact-search-editor.tsx # buscador completo del layout compacto
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx

@@ -8,6 +8,7 @@ import { PassengerSelectors } from "./passenger-selectors";
 import { RouteAndDateFields } from "./route-and-date-fields";
 import { TripTypeToggle } from "./trip-type-toggle";
 import { SearchLoader } from "@/components/search-loader";
+import { useFlightFilters } from "@/hooks/use-flight-filters";
 import { useFlightSearch } from "@/hooks/use-flight-search";
 import { flightSearchTitle } from "@/lib/flight-search";
 import { SEARCH_DURATION_MS } from "@/lib/search-loader";
@@ -21,6 +22,7 @@ import { buildResultsUrl } from "@/lib/results-url";
 export function FlightSearchSection() {
   const router = useRouter();
   const search = useFlightSearch();
+  const filters = useFlightFilters();
   const [isSearching, setIsSearching] = useState(false);
   // Bumped on every search so the loader remounts and restarts its phrases.
   const [searchRun, setSearchRun] = useState(0);
@@ -88,7 +90,7 @@ export function FlightSearchSection() {
           />
         </div>
 
-        <AdvancedFilters />
+        <AdvancedFilters filters={filters} />
       </div>
 
       <SearchLoader

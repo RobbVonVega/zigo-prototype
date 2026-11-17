@@ -5,15 +5,20 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { AppShell } from "@/components/app-shell";
+import { AdvancedFilters } from "@/components/flight-search/advanced-filters";
+import { CompactQueryBar } from "./compact-query-bar";
+import { CompactSearchEditor } from "./compact-search-editor";
 import {
   FlightDetailsDrawer,
   type DetailsDirection,
 } from "./flight-details-drawer";
 import { FlightPriceBlock } from "./flight-price-block";
+import { LayoutToggle, type ResultsLayout } from "./layout-toggle";
 import { ResultsSearchPanel } from "./results-search-panel";
 import { TripSummaryCard } from "./trip-summary-card";
-import { AdvancedFilters } from "@/components/flight-search/advanced-filters";
+import { useFlightFilters } from "@/hooks/use-flight-filters";
 import { useFlightSearch } from "@/hooks/use-flight-search";
+import { cn } from "@/lib/cn";
 import { priceBlocks } from "@/lib/results";
 import {
   buildResultsUrl,
@@ -38,9 +43,10 @@ type DrawerState = {
 };
 
 /**
- * Results screen (Figma 6724-5421): narrow search column on the left, filters
- * and price blocks on the right, sticky trip summary. Flights can only be
- * combined inside the same block.
+ * Results screen. Two presentations over the same state:
+ * - standard (6724-5421): search column on the left, filters on top.
+ * - compact (6729-3375 / 6733-4512): compact query bar with an editable search,
+ *   icon-only sticky filter rail on the left.
  */
 export function ResultsView() {
   const params = useSearchParams();
@@ -59,6 +65,11 @@ export function ResultsView() {
     departureDate: initial.departureDate,
     returnDate: initial.returnDate,
   });
+
+  const filters = useFlightFilters();
+
+  const [layout, setLayout] = useState<ResultsLayout>("standard");
+  const [editOpen, setEditOpen] = useState(false);
 
   // Nothing is selected on arrival: the summary starts without a total.
   const [selection, setSelection] = useState<Selection | null>(null);
@@ -143,7 +154,7 @@ export function ResultsView() {
     });
   }
 
-  /** Re-runs the search: URL reflects the new params and block 1 is selected. */
+  /** Re-runs the search: URL reflects the new params and the selection resets. */
   function handleSearch() {
     router.replace(
       buildResultsUrl({
@@ -158,14 +169,131 @@ export function ResultsView() {
     setSelection(null);
   }
 
+  const layoutToggle = (
+    <LayoutToggle
+      value={layout}
+      onChange={(next) => {
+        setLayout(next);
+        if (next === "standard") setEditOpen(false);
+      }}
+    />
+  );
+
+  const blocks = (
+    <div
+      className={cn(
+        "flex flex-col",
+        layout === "standard" ? "gap-4" : "gap-2",
+      )}
+    >
+      {priceBlocks.map((block) => (
+        <FlightPriceBlock
+          key={block.id}
+          block={block}
+          selected={block.id === selection?.blockId}
+          selectedOutboundId={
+            block.id === selection?.blockId ? selection.outboundId : undefined
+          }
+          selectedReturnId={
+            block.id === selection?.blockId ? selection.returnId : undefined
+          }
+          showReturn={search.isRoundTrip}
+          originCode={originCode}
+          destinationCode={destinationCode}
+          departureLabel={departureLabel}
+          returnLabel={returnLabel}
+          onSelect={(direction, flightId) =>
+            selectFlight(block.id, direction, flightId)
+          }
+          onShowDetails={(direction, flightId) =>
+            showFlightDetails(block.id, direction, flightId)
+          }
+        />
+      ))}
+    </div>
+  );
+
+  const summaryCard = (
+    <TripSummaryCard
+      block={selectedBlock}
+      outbound={selectedOutbound}
+      returning={selectedReturning}
+      showReturn={search.isRoundTrip}
+      onOpenDetails={showTripDetails}
+    />
+  );
+
+  const drawerNode = (
+    <FlightDetailsDrawer
+      open={drawer !== null}
+      onClose={() => setDrawer(null)}
+      flight={drawerFlight}
+      block={drawerBlock}
+      direction={drawer?.direction ?? "outbound"}
+      onDirectionChange={(direction) =>
+        setDrawer((current) => (current ? { ...current, direction } : current))
+      }
+      showTabs={drawer?.showTabs ?? false}
+      origin={search.origin}
+      destination={search.destination}
+      departureDate={search.departureDate}
+      returnDate={search.returnDate}
+    />
+  );
+
+  if (layout === "compact") {
+    return (
+      <AppShell headerExtra={layoutToggle}>
+        <CompactQueryBar
+          search={search}
+          editOpen={editOpen}
+          onToggleEdit={() => setEditOpen((value) => !value)}
+        />
+
+        {editOpen ? (
+          <CompactSearchEditor
+            search={search}
+            onSearch={() => {
+              handleSearch();
+              setEditOpen(false);
+            }}
+          />
+        ) : null}
+
+        <div className="relative px-20 pt-4">
+          <div className="flex items-start gap-2">
+            <AdvancedFilters filters={filters} variant="rail" />
+
+            <div className="min-w-0 flex-1">{blocks}</div>
+
+            <div className="sticky top-4 hidden w-[284px] shrink-0 min-[1400px]:block">
+              {summaryCard}
+            </div>
+          </div>
+
+          {editOpen ? (
+            <button
+              type="button"
+              aria-label="Cerrar edición de búsqueda"
+              onClick={() => setEditOpen(false)}
+              className="absolute inset-0 z-10 cursor-default bg-black/20"
+            />
+          ) : null}
+        </div>
+
+        {drawerNode}
+      </AppShell>
+    );
+  }
+
   return (
-    <AppShell>
+    <AppShell headerExtra={layoutToggle}>
       <div className="px-8 py-4">
         <div className="flex items-start gap-6">
           <ResultsSearchPanel search={search} onSearch={handleSearch} />
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <AdvancedFilters />
+            <AdvancedFilters filters={filters} />
 
             <div className="flex items-start gap-2">
               <div className="min-w-0 flex-1">
@@ -174,69 +302,18 @@ export function ResultsView() {
                   horario.
                 </p>
 
-                <div className="flex flex-col gap-4">
-                  {priceBlocks.map((block) => (
-                    <FlightPriceBlock
-                      key={block.id}
-                      block={block}
-                      selected={block.id === selection?.blockId}
-                      selectedOutboundId={
-                        block.id === selection?.blockId
-                          ? selection.outboundId
-                          : undefined
-                      }
-                      selectedReturnId={
-                        block.id === selection?.blockId
-                          ? selection.returnId
-                          : undefined
-                      }
-                      showReturn={search.isRoundTrip}
-                      originCode={originCode}
-                      destinationCode={destinationCode}
-                      departureLabel={departureLabel}
-                      returnLabel={returnLabel}
-                      onSelect={(direction, flightId) =>
-                        selectFlight(block.id, direction, flightId)
-                      }
-                      onShowDetails={(direction, flightId) =>
-                        showFlightDetails(block.id, direction, flightId)
-                      }
-                    />
-                  ))}
-                </div>
+                {blocks}
               </div>
 
               <div className="sticky top-4 hidden w-[240px] shrink-0 min-[1400px]:block">
-                <TripSummaryCard
-                  block={selectedBlock}
-                  outbound={selectedOutbound}
-                  returning={selectedReturning}
-                  showReturn={search.isRoundTrip}
-                  onOpenDetails={showTripDetails}
-                />
+                {summaryCard}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <FlightDetailsDrawer
-        open={drawer !== null}
-        onClose={() => setDrawer(null)}
-        flight={drawerFlight}
-        block={drawerBlock}
-        direction={drawer?.direction ?? "outbound"}
-        onDirectionChange={(direction) =>
-          setDrawer((current) =>
-            current ? { ...current, direction } : current,
-          )
-        }
-        showTabs={drawer?.showTabs ?? false}
-        origin={search.origin}
-        destination={search.destination}
-        departureDate={search.departureDate}
-        returnDate={search.returnDate}
-      />
+      {drawerNode}
     </AppShell>
   );
 }

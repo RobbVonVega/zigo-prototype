@@ -37,6 +37,8 @@ Everything in this prototype traces back to a node in the ZIGO Figma file:
 | ↳ | Price block + flight row | [flight-price-block.tsx](../src/components/results/flight-price-block.tsx) · [flight-option-row.tsx](../src/components/results/flight-option-row.tsx) |
 | ↳ | Sticky "Detalle de tu viaje" | [trip-summary-card.tsx](../src/components/results/trip-summary-card.tsx) |
 | `6741-11055` / `6740-9495` | Flight details drawer (plain / with Ida-Regreso tabs) | [flight-details-drawer.tsx](../src/components/results/flight-details-drawer.tsx) · [lib/flight-details.ts](../src/lib/flight-details.ts) |
+| `6729-3375` | Results — Top 1 Columns (compact layout) | [compact-query-bar.tsx](../src/components/results/compact-query-bar.tsx) · [layout-toggle.tsx](../src/components/results/layout-toggle.tsx) |
+| `6733-4512` | Compact with the search editor open | [compact-search-editor.tsx](../src/components/results/compact-search-editor.tsx) |
 | ↳ | Mock itineraries / COP format | [lib/results.ts](../src/lib/results.ts) |
 | — | Calendar (shadcn-style) | [ui/calendar.tsx](../src/components/ui/calendar.tsx) |
 
@@ -56,6 +58,7 @@ typed) and is passed down to presentational components.
 | Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. Defaults: Escalas / Tipo de cabina / Equipaje start on their first `Cualquier…` option (checked, but the pill stays neutral — choosing it again clears the filter); Aerolíneas starts empty; Tiempos starts on Ida with both ranges at the full day (`12:00 am - 11:59 pm`). With a real selection the pill turns cyan (#D3F7FA), swaps the chevron for an X and shows a summary: one airline by name, two or more as `Avianca +1`. |
 | Promo + vuelos | Static for now: "Reserva ahora" and "Ver detalles" are real buttons with no action yet. Photos are local 2x exports (`public/images`). |
 | Buscar / loader | `Buscar` opens the 6739-4961 modal for 5.2s: scrim 60%, 414×251 card, trip type, origin/destination codes, dates, 5 rotating phrases (1.1s each), gradient progress bar with the plane at its tip, and the closing line. It needs origin + destination + departure date, otherwise the button is disabled. Escape or the 5.2s timer closes it. On completion it navigates to `/resultados` with the search in the URL. |
+| Layouts | The top-bar toggle (`Estándar` / `Compact`) switches presentation without losing state: search, filters, selection and the drawer are shared. Compact replaces the search column with a 51px query bar (route, dates, travellers, `Editar`); `Editar` reveals the same search controls as a full-width bar and dims the results 20% until closed. Its filters are the same menus in a sticky 56px icon rail; hovering a pill shows the full label. |
 | Detalle del vuelo | Clicking a `Directo` / `N Escalas` tag opens the right drawer (639px, scrim 60%) for that flight, without tabs. The chevron next to "Detalle de tu viaje" opens the same drawer for the selected combination with `Vuelo de Ida` / `Vuelo de Regreso` tabs (round trips). Each leg shows date, duration, and a timeline: airline + flight number, departure/arrival airports with times, durations and layovers; segments are derived from the mock row (stops + duration) in `lib/flight-details.ts`. Escape, the X or the scrim close it. |
 | Resultados | `/resultados?trip=…&from=UIO&to=BOG&dep=2026-12-18&ret=…&adults=1` — the URL is the search state (direct links work, defaults match the Figma mock). Nothing is selected on arrival, so the summary starts without a total. Flight options are radios inside each block and can only be combined within the same block: picking a flight in another block starts a fresh combination with that block's first flight in the other direction. The chosen block gets the cyan `#73DFED` border; the sticky card fades in the new details (price, airline, luggage, both flight times) on every change. `Buscar` in the left column rewrites the URL, clears the selection and both columns stay sticky. One-way hides the return column and the return row in the summary. Blocks collapse from their chevron. |
 
@@ -67,7 +70,8 @@ typed) and is passed down to presentational components.
 | Top bar | 56px tall, `#F0F0F0`, 32px/12px padding |
 | Main separator | 1px `#1E1E1E` at 7% |
 | Content padding | 80px sides / 32px top-bottom at 1440 → `xl:px-20 xl:py-8`; 32/24 below |
-| Content max width | 1040px, centred (`app-shell.tsx`) |
+| Content max width | 1040px on the home screen; results screens stretch |
+| Compact results | 80px sides, 51px query bar, 56px filter rail, 674px blocks, 284px summary |
 | Section gap | 32px between blocks, 24px inside the flight-search section |
 | Panel | 10px radius, 16px padding, 16px inner gap, 1px `#ECECEC` inset ring |
 | Fields | 30px tall, 5px radius, 1px `#ECECEC` border, `10px/6px` padding, 6px gap |

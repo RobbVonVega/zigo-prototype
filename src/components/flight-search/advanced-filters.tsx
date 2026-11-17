@@ -3,20 +3,27 @@
 import { FilterChoice } from "./filter-choice";
 import { FilterDropdown } from "./filter-dropdown";
 import { TimeFilter } from "./time-filter";
-import { useFlightFilters } from "@/hooks/use-flight-filters";
+import type { FlightFiltersModel } from "@/hooks/use-flight-filters";
 import { advancedFilters, type AdvancedFilter } from "@/lib/flight-search";
+import { cn } from "@/lib/cn";
 
 type SingleId = "stops" | "cabin" | "bags";
 
 /**
- * Secondary filters, right-aligned under the search panel (Figma node 6706-1423).
- * Each pill opens its menu from nodes 6729-6109 (Escalas), 6729-6130 (Aerolíneas),
- * 6729-6384 (Tipo de cabina), 6729-6448 (Equipaje) and 6729-6500 (Tiempos).
- * Once a filter has a selection the pill turns cyan and shows a summary + X
- * (node 6729-5960).
+ * Secondary filters (Figma node 6706-1423). Two presentations share the same
+ * state and menus:
+ * - `row`: labelled pills above the results (standard layout).
+ * - `rail`: sticky 56px icon-only pills on the left (compact layout, 6729-3375);
+ *   hovering shows the full label.
  */
-export function AdvancedFilters() {
-  const filters = useFlightFilters();
+export function AdvancedFilters({
+  filters,
+  variant = "row",
+}: {
+  filters: FlightFiltersModel;
+  variant?: "row" | "rail";
+}) {
+  const compact = variant === "rail";
 
   /** "Avianca", "Avianca +1", "Sin escalas", … */
   function summaryFor(filter: AdvancedFilter): string | null {
@@ -49,14 +56,17 @@ export function AdvancedFilters() {
    * neutral state: the radio is checked but the pill stays inactive.
    */
   function checkedSingleId(filter: AdvancedFilter): string | undefined {
-    return (
-      filters.single[filter.id as SingleId] ??
-      filter.options?.[0]?.id
-    );
+    return filters.single[filter.id as SingleId] ?? filter.options?.[0]?.id;
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-start gap-2">
+    <div
+      className={cn(
+        compact
+          ? "sticky top-4 flex w-14 shrink-0 flex-col gap-2 self-start"
+          : "flex flex-wrap items-center justify-start gap-2",
+      )}
+    >
       {advancedFilters.map((filter) => {
         if (filter.kind === "time") {
           return (
@@ -66,6 +76,7 @@ export function AdvancedFilters() {
               onChange={filters.setTimeWindow}
               onClearField={filters.clearTimeField}
               onClear={() => filters.clear(filter.id)}
+              compact={compact}
             />
           );
         }
@@ -83,6 +94,7 @@ export function AdvancedFilters() {
             icon={filter.icon}
             activeLabel={summaryFor(filter)}
             onClear={() => filters.clear(filter.id)}
+            compact={compact}
           >
             <div
               role={isMultiple ? "group" : "radiogroup"}
@@ -107,10 +119,7 @@ export function AdvancedFilters() {
                       return;
                     }
 
-                    filters.selectSingle(
-                      filter.id as SingleId,
-                      option.id,
-                    );
+                    filters.selectSingle(filter.id as SingleId, option.id);
                   }}
                 />
               ))}

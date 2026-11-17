@@ -78,6 +78,8 @@ export type TimeFilterProps = {
   onChange: (tab: TimeTab, field: TimeField, window: TimeWindow) => void;
   onClearField: (tab: TimeTab, field: TimeField) => void;
   onClear: () => void;
+  /** Icon-only trigger for the compact results rail. */
+  compact?: boolean;
 };
 
 /**
@@ -89,6 +91,7 @@ export function TimeFilter({
   onChange,
   onClearField,
   onClear,
+  compact = false,
 }: TimeFilterProps) {
   const [tab, setTab] = useState<TimeTab>("outbound");
   const current = times[tab];
@@ -109,6 +112,7 @@ export function TimeFilter({
       activeLabel={isActive ? "Rango de salida y regreso" : null}
       onClear={onClear}
       bodyClassName="gap-6"
+      compact={compact}
     >
       <div className="flex gap-[10px] border-b border-line">
         {(
