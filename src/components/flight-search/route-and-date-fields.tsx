@@ -19,6 +19,9 @@ export type RouteAndDateFieldsProps = {
   onDepartureChange: (date: Date | undefined) => void;
   onReturnChange: (date: Date | undefined) => void;
   onSwap: () => void;
+  onSearch: () => void;
+  /** Search needs origin, destination and departure date. */
+  canSearch: boolean;
 };
 
 /**
@@ -41,6 +44,8 @@ export function RouteAndDateFields({
   onDepartureChange,
   onReturnChange,
   onSwap,
+  onSearch,
+  canSearch,
 }: RouteAndDateFieldsProps) {
   const [originField, destinationField] = routeFields;
 
@@ -107,7 +112,10 @@ export function RouteAndDateFields({
 
         <button
           type="button"
-          className="ml-3 flex h-[30px] w-[131px] shrink-0 items-center justify-center gap-1 rounded-[4px] bg-brand px-5 py-2 text-xs leading-3 font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover"
+          onClick={onSearch}
+          disabled={!canSearch}
+          title={canSearch ? undefined : "Completa origen, destino y fecha de salida"}
+          className="ml-3 flex h-[30px] w-[131px] shrink-0 items-center justify-center gap-1 rounded-[4px] bg-brand px-5 py-2 text-xs leading-3 font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-brand"
         >
           Buscar
         </button>

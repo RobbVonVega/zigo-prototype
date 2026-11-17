@@ -40,4 +40,6 @@ export type IconName =
   | "close"
   // Promo + flight cards
   | "info"
-  | "copy";
+  | "copy"
+  // Search loader
+  | "plane";
