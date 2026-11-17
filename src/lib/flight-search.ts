@@ -54,6 +54,10 @@ export type AdvancedFilter = {
   title: string;
   icon: IconName;
   kind: "single" | "multiple" | "time";
+  /**
+   * Single-choice filters: the first option is the neutral "Cualquier…" choice.
+   * It is checked by default and selecting it leaves the pill inactive.
+   */
   options?: readonly FilterOption[];
 };
 

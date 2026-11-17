@@ -44,6 +44,17 @@ export function AdvancedFilters() {
     return filter.label;
   }
 
+  /**
+   * Single filters start on their first ("Cualquier…") option, which is the
+   * neutral state: the radio is checked but the pill stays inactive.
+   */
+  function checkedSingleId(filter: AdvancedFilter): string | undefined {
+    return (
+      filters.single[filter.id as SingleId] ??
+      filter.options?.[0]?.id
+    );
+  }
+
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
       {advancedFilters.map((filter) => {
@@ -62,7 +73,7 @@ export function AdvancedFilters() {
         const isMultiple = filter.kind === "multiple";
         const selected = isMultiple
           ? filters.airlines
-          : [filters.single[filter.id as SingleId]];
+          : [checkedSingleId(filter)];
 
         return (
           <FilterDropdown
@@ -84,14 +95,23 @@ export function AdvancedFilters() {
                   label={option.label}
                   multiple={isMultiple}
                   checked={selected.includes(option.id)}
-                  onSelect={() =>
-                    isMultiple
-                      ? filters.toggleAirline(option.id)
-                      : filters.selectSingle(
-                          filter.id as SingleId,
-                          option.id,
-                        )
-                  }
+                  onSelect={() => {
+                    if (isMultiple) {
+                      filters.toggleAirline(option.id);
+                      return;
+                    }
+
+                    // The first option is "Cualquier…": clearing the filter.
+                    if (option.id === filter.options?.[0]?.id) {
+                      filters.clear(filter.id);
+                      return;
+                    }
+
+                    filters.selectSingle(
+                      filter.id as SingleId,
+                      option.id,
+                    );
+                  }}
                 />
               ))}
             </div>

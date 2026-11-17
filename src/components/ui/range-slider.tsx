@@ -19,7 +19,7 @@ export type RangeSliderProps = {
 export function RangeSlider({
   min,
   max,
-  step = 15,
+  step = 1,
   value,
   onChange,
   label,

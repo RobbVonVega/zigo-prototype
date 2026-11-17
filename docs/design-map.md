@@ -43,7 +43,7 @@ typed) and is passed down to presentational components.
 | Passenger counters | `−` / `+` change one unit per click, clamped **1–9 for adults** and **0–9 for children/infants**; the minus disables at each floor. |
 | Origen / Destino | Searchable combobox over 30 Latin American airports ([airports.ts](../src/lib/airports.ts)): the list matches the field width and any click on the field focuses + opens it; filters by city, country or IATA code as you type; arrow keys + Enter work; the swap button exchanges both. |
 | Fechas | shadcn-style calendar (react-day-picker) with our tokens, Spanish locale. Past days are disabled; `Fecha de regreso` also disables days before the departure date, and changing departure after the return clears the return. One-way trips fade the return field out (width + opacity, 300ms) while the departure grows 160 → 332px. |
-| Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. With a selection the pill turns cyan (#D3F7FA), swaps the chevron for an X, and shows a summary: one airline by name, two or more as `Avianca +1`. X or `Borrar selección` resets it. Tiempos de vuelo keeps its label but gets the same active treatment. |
+| Filtros avanzados | Each pill opens a 240px menu from the Figma nodes above. Defaults: Escalas / Tipo de cabina / Equipaje start on their first `Cualquier…` option (checked, but the pill stays neutral — choosing it again clears the filter); Aerolíneas starts empty; Tiempos starts on Ida with both ranges at the full day (`12:00 am - 11:59 pm`). With a real selection the pill turns cyan (#D3F7FA), swaps the chevron for an X and shows a summary: one airline by name, two or more as `Avianca +1`. |
 
 ## Layout constants (desktop, from Figma)
 

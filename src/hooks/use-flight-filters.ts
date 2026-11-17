@@ -16,8 +16,8 @@ export type TimeWindows = Record<
   Record<TimeField, TimeWindow>
 >;
 
-/** 10:00 am – 5:00 pm, the range shown in the Figma menu. */
-export const DEFAULT_TIME_WINDOW: TimeWindow = { start: 10 * 60, end: 17 * 60 };
+/** Full-day window, shown at rest with both thumbs at the extremes. */
+export const DEFAULT_TIME_WINDOW: TimeWindow = { start: 0, end: 24 * 60 - 1 };
 
 type SingleFilterId = "stops" | "cabin" | "bags";
 
