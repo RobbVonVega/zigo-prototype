@@ -1,3 +1,4 @@
+import { Icon } from "@/components/icon";
 import {
   formatCop,
   stopsLabel,
@@ -38,6 +39,8 @@ export type TripSummaryCardProps = {
   outbound?: FlightOption;
   returning?: FlightOption;
   showReturn: boolean;
+  /** Opens the flight-details drawer (tabs variant). */
+  onOpenDetails?: () => void;
 };
 
 /**
@@ -52,6 +55,7 @@ export function TripSummaryCard({
   outbound,
   returning,
   showReturn,
+  onOpenDetails,
 }: TripSummaryCardProps) {
   const detailKey = `${block?.id ?? "none"}-${outbound?.id ?? ""}-${
     returning?.id ?? ""
@@ -59,9 +63,22 @@ export function TripSummaryCard({
 
   return (
     <div className="rounded-[8px] bg-white px-3 pt-6 pb-6 ring-1 ring-ink/10">
-      <h2 className="text-body-lg leading-[11px] font-medium text-ink">
-        Detalle de tu viaje
-      </h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-body-lg leading-[11px] font-medium text-ink">
+          Detalle de tu viaje
+        </h2>
+
+        {block && onOpenDetails ? (
+          <button
+            type="button"
+            onClick={onOpenDetails}
+            aria-label="Ver detalles del viaje"
+            className="grid size-[18px] shrink-0 place-items-center rounded-[4px] text-ink transition-colors hover:bg-surface"
+          >
+            <Icon name="chevron-down" className="size-[18px]" />
+          </button>
+        ) : null}
+      </div>
 
       <div key={detailKey} className="animate-loader-fade">
         <div className="mt-5 rounded-[4px] border border-line p-3">

@@ -104,6 +104,7 @@
   --animate-search-progress: search-progress 5s ease-out forwards;
   --animate-loader-fade: loader-fade 0.2s ease-out;
   --animate-loader-pop: loader-pop 0.22s ease-out;
+  --animate-loader-slide: loader-slide 0.24s ease-out;
 
   @keyframes search-progress {
     from {
@@ -131,6 +132,17 @@
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes loader-slide {
+    from {
+      opacity: 0;
+      transform: translateX(32px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 }

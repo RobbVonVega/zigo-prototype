@@ -46,6 +46,7 @@ function FlightColumn({
   flights,
   selectedId,
   onSelect,
+  onShowDetails,
 }: {
   title: string;
   fromCode: string;
@@ -54,6 +55,7 @@ function FlightColumn({
   flights: PriceBlock["outbound"];
   selectedId?: string;
   onSelect: (flightId: string) => void;
+  onShowDetails: (flightId: string) => void;
 }) {
   return (
     <div role="radiogroup" aria-label={title}>
@@ -75,6 +77,7 @@ function FlightColumn({
           flight={flight}
           selected={flight.id === selectedId}
           onSelect={() => onSelect(flight.id)}
+          onShowDetails={() => onShowDetails(flight.id)}
         />
       ))}
     </div>
@@ -92,6 +95,7 @@ export type FlightPriceBlockProps = {
   departureLabel: string;
   returnLabel: string;
   onSelect: (direction: "outbound" | "returning", flightId: string) => void;
+  onShowDetails: (direction: "outbound" | "returning", flightId: string) => void;
 };
 
 /**
@@ -110,6 +114,7 @@ export function FlightPriceBlock({
   departureLabel,
   returnLabel,
   onSelect,
+  onShowDetails,
 }: FlightPriceBlockProps) {
   const [open, setOpen] = useState(true);
 
@@ -186,6 +191,7 @@ export function FlightPriceBlock({
             flights={block.outbound}
             selectedId={selectedOutboundId}
             onSelect={(flightId) => onSelect("outbound", flightId)}
+            onShowDetails={(flightId) => onShowDetails("outbound", flightId)}
           />
 
           {showReturn ? (
@@ -197,6 +203,7 @@ export function FlightPriceBlock({
               flights={block.returning}
               selectedId={selectedReturnId}
               onSelect={(flightId) => onSelect("returning", flightId)}
+              onShowDetails={(flightId) => onShowDetails("returning", flightId)}
             />
           ) : null}
         </div>

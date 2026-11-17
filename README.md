@@ -27,6 +27,7 @@ cliente.
 | Contenido con ancho máximo de 1040px | Listo |
 | Loader al buscar (6739-4961) | Listo |
 | Pantalla de resultados (6724-5421) | Listo |
+| Detalle de vuelo en drawer (6741-11055 / 6740-9495) | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -72,6 +73,7 @@ src/
       flight-price-block.tsx  # bloque de precio + combinaciones
       flight-option-row.tsx   # fila de vuelo (radio, horario, escalas)
       trip-summary-card.tsx   # resumen sticky "Detalle de tu viaje"
+      flight-details-drawer.tsx # drawer "Detalles del vuelo" (con tabs)
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -102,6 +104,7 @@ src/
     search-loader.ts   # frases y tiempos del loader
     results.ts         # 5 itinerarios mock + formato COP
     results-url.ts     # serialización/parseo de la búsqueda en la URL
+    flight-details.ts  # segmentos/escalas derivados para el drawer
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)

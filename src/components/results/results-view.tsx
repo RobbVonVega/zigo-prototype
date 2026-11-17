@@ -5,6 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { AppShell } from "@/components/app-shell";
+import {
+  FlightDetailsDrawer,
+  type DetailsDirection,
+} from "./flight-details-drawer";
 import { FlightPriceBlock } from "./flight-price-block";
 import { ResultsSearchPanel } from "./results-search-panel";
 import { TripSummaryCard } from "./trip-summary-card";
@@ -23,6 +27,14 @@ type Selection = {
   blockId: string;
   outboundId?: string;
   returnId?: string;
+};
+
+type DrawerState = {
+  blockId: string;
+  direction: DetailsDirection;
+  /** Tabs only when opened from the summary card on a round trip. */
+  showTabs: boolean;
+  flightId?: string;
 };
 
 /**
@@ -50,6 +62,7 @@ export function ResultsView() {
 
   // Nothing is selected on arrival: the summary starts without a total.
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [drawer, setDrawer] = useState<DrawerState | null>(null);
 
   const originCode = search.origin?.code ?? "UIO";
   const destinationCode = search.destination?.code ?? "BOG";
@@ -96,6 +109,37 @@ export function ResultsView() {
         ...current,
         [direction === "outbound" ? "outboundId" : "returnId"]: flightId,
       };
+    });
+  }
+
+  const drawerBlock = drawer
+    ? (priceBlocks.find((block) => block.id === drawer.blockId) ?? null)
+    : null;
+
+  const drawerFlight = drawer?.flightId
+    ? [...(drawerBlock?.outbound ?? []), ...(drawerBlock?.returning ?? [])].find(
+        (flight) => flight.id === drawer.flightId,
+      )
+    : drawer?.direction === "outbound"
+      ? selectedOutbound
+      : selectedReturning;
+
+  /** Tag click: one leg, no tabs. */
+  function showFlightDetails(
+    blockId: string,
+    direction: DetailsDirection,
+    flightId: string,
+  ) {
+    setDrawer({ blockId, direction, showTabs: false, flightId });
+  }
+
+  /** Card button: the selected combination, with Ida/Regreso tabs. */
+  function showTripDetails() {
+    if (!selectedBlock) return;
+    setDrawer({
+      blockId: selectedBlock.id,
+      direction: "outbound",
+      showTabs: search.isRoundTrip,
     });
   }
 
@@ -154,6 +198,9 @@ export function ResultsView() {
                       onSelect={(direction, flightId) =>
                         selectFlight(block.id, direction, flightId)
                       }
+                      onShowDetails={(direction, flightId) =>
+                        showFlightDetails(block.id, direction, flightId)
+                      }
                     />
                   ))}
                 </div>
@@ -165,12 +212,31 @@ export function ResultsView() {
                   outbound={selectedOutbound}
                   returning={selectedReturning}
                   showReturn={search.isRoundTrip}
+                  onOpenDetails={showTripDetails}
                 />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <FlightDetailsDrawer
+        open={drawer !== null}
+        onClose={() => setDrawer(null)}
+        flight={drawerFlight}
+        block={drawerBlock}
+        direction={drawer?.direction ?? "outbound"}
+        onDirectionChange={(direction) =>
+          setDrawer((current) =>
+            current ? { ...current, direction } : current,
+          )
+        }
+        showTabs={drawer?.showTabs ?? false}
+        origin={search.origin}
+        destination={search.destination}
+        departureDate={search.departureDate}
+        returnDate={search.returnDate}
+      />
     </AppShell>
   );
 }
