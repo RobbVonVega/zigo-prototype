@@ -7,9 +7,12 @@ import { formatCop, type PriceBlock } from "@/lib/results";
 export function PaymentSection({
   block,
   onPay,
+  disabled = false,
 }: {
   block: PriceBlock;
   onPay: () => void;
+  /** The flow only continues once every passenger has information. */
+  disabled?: boolean;
 }) {
   return (
     <section className="flex flex-col gap-4">
@@ -28,7 +31,13 @@ export function PaymentSection({
         <button
           type="button"
           onClick={onPay}
-          className="h-[30px] w-full rounded-[4px] bg-brand text-xs font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover"
+          disabled={disabled}
+          title={
+            disabled
+              ? "Agrega la información de todos los pasajeros para continuar"
+              : undefined
+          }
+          className="h-[30px] w-full rounded-[4px] bg-brand text-xs font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-brand"
         >
           Ir al Pago
         </button>

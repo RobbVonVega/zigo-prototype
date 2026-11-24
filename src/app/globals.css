@@ -105,6 +105,7 @@
   --animate-loader-fade: loader-fade 0.2s ease-out;
   --animate-loader-pop: loader-pop 0.22s ease-out;
   --animate-loader-slide: loader-slide 0.24s ease-out;
+  --animate-overlay-pop: overlay-pop 0.25s ease-out;
 
   @keyframes search-progress {
     from {
@@ -143,6 +144,18 @@
     to {
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+
+  /* Modals: float up + fade in */
+  @keyframes overlay-pop {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }

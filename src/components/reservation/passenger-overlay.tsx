@@ -128,7 +128,7 @@ export function PassengerOverlay({
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/60 p-6"
+      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/60 p-6 [animation:loader-fade_0.2s_ease-out]"
       onClick={onClose}
     >
       <div
@@ -136,7 +136,7 @@ export function PassengerOverlay({
         aria-modal="true"
         aria-label="Información de Pasajero"
         onClick={(event) => event.stopPropagation()}
-        className="my-auto flex max-h-[92vh] w-[629px] max-w-full flex-col gap-5 overflow-y-auto rounded-[8px] border border-ink/10 bg-white px-3 py-6"
+        className="my-auto flex max-h-[92vh] w-[629px] max-w-full animate-overlay-pop flex-col gap-5 overflow-y-auto rounded-[8px] border border-ink/10 bg-white px-3 py-6"
       >
         <div className="flex items-center justify-between gap-5">
           <h2 className="text-[24px] leading-[18px] font-semibold tracking-[-0.04em] text-ink">

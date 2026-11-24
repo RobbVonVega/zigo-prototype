@@ -32,6 +32,7 @@ cliente.
 | Reserva paso 1: info de vuelos + resumen con timer (6759-7498 / 6761-15161 / 6761-15597) | Listo |
 | Reserva: pasajeros (tarjetas + modal de empresa/persona) | Listo |
 | Reserva: contacto editable, info importante, proceder al pago | Listo |
+| Reserva: pago bloqueado hasta completar pasajeros + animación del modal | Listo |
 | Reserva: skeleton de carga | Listo |
 | Pago: esperando / error / expirado / éxito (6770-7488, 6775-15138, 6775-14878, 6775-7708) | Listo |
 

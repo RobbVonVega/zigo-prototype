@@ -109,6 +109,9 @@ export function ReservationView() {
     setEditingIndex(null);
   }
 
+  const allPassengersAdded =
+    passengers.length > 0 && passengers.every((passenger) => passenger.info);
+
   function updateContact(next: ContactDetails) {
     setContact(next);
     setContactEdited(true);
@@ -178,6 +181,7 @@ export function ReservationView() {
 
               <PaymentSection
                 block={block}
+                disabled={!allPassengersAdded}
                 onPay={() =>
                   router.push(
                     buildPaymentUrl({
