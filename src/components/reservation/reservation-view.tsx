@@ -1,16 +1,20 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/app-shell";
 import {
   FlightDetailsDrawer,
   type DetailsDirection,
 } from "@/components/results/flight-details-drawer";
+import { ContactSection, type ContactDetails } from "./contact-section";
+import { ImportantInfoSection } from "./important-info-section";
 import { PassengerOverlay } from "./passenger-overlay";
 import { PassengersSection } from "./passengers-section";
+import { PaymentSection } from "./payment-section";
 import { ReservationFlightInfo } from "./reservation-flight-info";
+import { ReservationSkeleton } from "./reservation-skeleton";
 import { ReservationStepper } from "./reservation-stepper";
 import { ReservationSummary } from "./reservation-summary";
 import {
@@ -23,6 +27,9 @@ import { parseReservationParams } from "@/lib/results-url";
 
 /** Fare hold shown in the summary (15 minutes). */
 const HOLD_SECONDS = 15 * 60;
+
+/** Skeleton time while the reservation "loads". */
+const LOADING_MS = 700;
 
 /**
  * Reservation screen, step 1 (Figma 6759-7498): stepper, the flight summary for
@@ -38,6 +45,7 @@ export function ReservationView() {
     [params],
   );
 
+  const [loading, setLoading] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsDirection, setDetailsDirection] =
     useState<DetailsDirection>("outbound");
@@ -52,14 +60,43 @@ export function ReservationView() {
   );
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
+  // Contact details: prefilled from passenger 1 until the user edits them.
+  const [contact, setContact] = useState<ContactDetails>({
+    name: "",
+    phone: "",
+    email: "",
+  });
+  const [contactEdited, setContactEdited] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), LOADING_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
   function savePassenger(info: PassengerInfo) {
     if (editingIndex === null) return;
+
     setPassengers((current) =>
       current.map((passenger, index) =>
         index === editingIndex ? { ...passenger, info } : passenger,
       ),
     );
+
+    // Passenger 1 seeds the contact block while it is still untouched.
+    if (editingIndex === 0 && !contactEdited) {
+      setContact({
+        name: `${info.firstName} ${info.lastName}`,
+        phone: info.phone,
+        email: info.email,
+      });
+    }
+
     setEditingIndex(null);
+  }
+
+  function updateContact(next: ContactDetails) {
+    setContact(next);
+    setContactEdited(true);
   }
 
   const block =
@@ -80,15 +117,17 @@ export function ReservationView() {
     reservation.counts.child +
     reservation.counts.infant;
 
-  // The trip summary contact mirrors the first passenger once it is filled.
-  const firstPassenger = passengers[0]?.info;
-  const contact = firstPassenger
-    ? {
-        name: `${firstPassenger.firstName} ${firstPassenger.lastName}`,
-        email: firstPassenger.email,
-        phone: firstPassenger.phone,
-      }
-    : null;
+  // The contact block is the source of truth for the summary once it has data.
+  const summaryContact =
+    contact.name || contact.email || contact.phone ? contact : null;
+
+  if (loading) {
+    return (
+      <AppShell>
+        <ReservationSkeleton />
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell>
@@ -118,14 +157,18 @@ export function ReservationView() {
                 onEdit={(index) => setEditingIndex(index)}
               />
 
-              {/* Next passes: contacto, información y pago. */}
+              <ContactSection value={contact} onChange={updateContact} />
+
+              <ImportantInfoSection />
+
+              <PaymentSection block={block} />
             </div>
 
             <ReservationSummary
               block={block}
               travellers={travellers}
               tripLabel={isRoundTrip ? "Ida y vuelta" : "Solo ida"}
-              contact={contact}
+              contact={summaryContact}
               holdSeconds={HOLD_SECONDS}
             />
           </div>

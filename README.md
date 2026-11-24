@@ -31,7 +31,8 @@ cliente.
 | Layout compacto de resultados (6729-3375 / 6733-4512) | Listo |
 | Reserva paso 1: info de vuelos + resumen con timer (6759-7498 / 6761-15161 / 6761-15597) | Listo |
 | Reserva: pasajeros (tarjetas + modal de empresa/persona) | Listo |
-| Reserva: detalles de contacto, opciones e info importante | Pendiente |
+| Reserva: contacto editable, info importante, proceder al pago | Listo |
+| Reserva: skeleton de carga | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -90,6 +91,10 @@ src/
       passengers-section.tsx      # banner + tarjetas de pasajeros
       passenger-card.tsx          # tarjeta vacía / llena
       passenger-overlay.tsx       # modal "Información de Pasajero"
+      contact-section.tsx         # detalles de contacto (editable)
+      important-info-section.tsx  # textos de políticas
+      payment-section.tsx         # proceder al pago
+      reservation-skeleton.tsx    # skeleton de carga
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -125,6 +130,7 @@ src/
     use-countdown.ts   # timer de la tarifa reservada
   lib/
     passengers.ts      # directorio mock de empresas/personas + tipos
+    important-info.ts  # textos de información importante
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)
