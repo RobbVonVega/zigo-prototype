@@ -11,7 +11,15 @@ function Divider() {
   return <span aria-hidden="true" className="h-[15px] w-px bg-[#D3D3D3]" />;
 }
 
-function StopsTag({ stops }: { stops: FlightOption["stops"] }) {
+function StopsTag({
+  stops,
+  onShowDetails,
+  legLabel,
+}: {
+  stops: FlightOption["stops"];
+  onShowDetails: () => void;
+  legLabel: string;
+}) {
   const label =
     stops === 0
       ? "Directo"
@@ -22,16 +30,19 @@ function StopsTag({ stops }: { stops: FlightOption["stops"] }) {
           : "3+ Escalas";
 
   return (
-    <span
+    <button
+      type="button"
+      onClick={onShowDetails}
+      aria-label={`Ver detalles del ${legLabel.toLowerCase()}`}
       className={cn(
-        "rounded-[8px] border px-2 py-[3px] text-xs leading-[9px] font-medium",
+        "cursor-pointer rounded-[8px] border px-2 py-[3px] text-xs leading-[9px] font-medium transition-colors",
         stops === 0
-          ? "border-cyan-600 bg-cyan-soft text-cyan-600"
-          : "border-brand bg-brand-soft text-brand",
+          ? "border-cyan-600 bg-cyan-soft text-cyan-600 hover:bg-cyan-400/40"
+          : "border-brand bg-brand-soft text-brand hover:bg-brand-tint",
       )}
     >
       {label}
-    </span>
+    </button>
   );
 }
 
@@ -41,12 +52,14 @@ function FlightRow({
   date,
   flight,
   label,
+  onShowDetails,
 }: {
   from: Airport | null;
   to: Airport | null;
   date?: Date;
   flight: FlightOption;
   label: string;
+  onShowDetails: () => void;
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2 text-xs leading-[15px] tracking-[-0.04em]">
@@ -73,7 +86,11 @@ function FlightRow({
         {label}: {flight.duration}
       </span>
 
-      <StopsTag stops={flight.stops} />
+      <StopsTag
+        stops={flight.stops}
+        legLabel={label}
+        onShowDetails={onShowDetails}
+      />
     </div>
   );
 }
@@ -87,7 +104,8 @@ export type ReservationFlightInfoProps = {
   departureDate?: Date;
   returnDate?: Date;
   showReturn: boolean;
-  onShowDetails: () => void;
+  /** Opens the flight drawer on the matching leg. */
+  onShowDetails: (direction: "outbound" | "returning") => void;
 };
 
 /**
@@ -144,7 +162,7 @@ export function ReservationFlightInfo({
 
           <button
             type="button"
-            onClick={onShowDetails}
+            onClick={() => onShowDetails("outbound")}
             className="ml-auto text-xs leading-[14.4px] font-semibold text-brand underline underline-offset-[3px] transition-colors hover:text-brand-hover"
           >
             Mostrar detalles del viaje
@@ -159,6 +177,7 @@ export function ReservationFlightInfo({
           date={departureDate}
           flight={outbound}
           label="Vuelo de ida"
+          onShowDetails={() => onShowDetails("outbound")}
         />
 
         {showReturn && returning ? (
@@ -168,6 +187,7 @@ export function ReservationFlightInfo({
             date={returnDate}
             flight={returning}
             label="Vuelo de regreso"
+            onShowDetails={() => onShowDetails("returning")}
           />
         ) : null}
       </div>

@@ -146,7 +146,7 @@ export function ReservationView() {
 
   return (
     <AppShell>
-      <div className="px-8 py-8">
+      <div className="px-8 pt-8 pb-[30vh]">
         <div className="mx-auto flex w-full max-w-[938px] flex-col gap-[30px]">
           <ReservationStepper step={1} />
 
@@ -161,8 +161,8 @@ export function ReservationView() {
                 departureDate={reservation.departureDate}
                 returnDate={reservation.returnDate}
                 showReturn={isRoundTrip}
-                onShowDetails={() => {
-                  setDetailsDirection("outbound");
+                onShowDetails={(direction) => {
+                  setDetailsDirection(direction);
                   setDetailsOpen(true);
                 }}
               />

@@ -129,7 +129,7 @@ export function buildFlightLeg(
   if (arrival <= departure) arrival += 24 * 60;
   const total = arrival - departure;
 
-  const segmentCount = Math.min(option.stops + 1, 3);
+  const segmentCount = Math.min(option.stops + 1, 4);
   const seed = hash(option.id);
 
   const layovers: number[] = [];
