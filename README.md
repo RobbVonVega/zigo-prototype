@@ -30,7 +30,8 @@ cliente.
 | Detalle de vuelo en drawer (6741-11055 / 6740-9495) | Listo |
 | Layout compacto de resultados (6729-3375 / 6733-4512) | Listo |
 | Reserva paso 1: info de vuelos + resumen con timer (6759-7498 / 6761-15161 / 6761-15597) | Listo |
-| Reserva: pasajeros, contacto, opciones e info importante | Pendiente |
+| Reserva: pasajeros (tarjetas + modal de empresa/persona) | Listo |
+| Reserva: detalles de contacto, opciones e info importante | Pendiente |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -86,6 +87,9 @@ src/
       reservation-stepper.tsx     # stepper Contacto → Pago
       reservation-flight-info.tsx # "Tu viaje a …" + tarjeta de itinerario
       reservation-summary.tsx     # resumen + contacto + timer
+      passengers-section.tsx      # banner + tarjetas de pasajeros
+      passenger-card.tsx          # tarjeta vacía / llena
+      passenger-overlay.tsx       # modal "Información de Pasajero"
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -119,6 +123,8 @@ src/
     flight-details.ts  # segmentos/escalas derivados para el drawer
   hooks/
     use-countdown.ts   # timer de la tarifa reservada
+  lib/
+    passengers.ts      # directorio mock de empresas/personas + tipos
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)

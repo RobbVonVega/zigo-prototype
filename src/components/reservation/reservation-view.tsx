@@ -8,9 +8,16 @@ import {
   FlightDetailsDrawer,
   type DetailsDirection,
 } from "@/components/results/flight-details-drawer";
+import { PassengerOverlay } from "./passenger-overlay";
+import { PassengersSection } from "./passengers-section";
 import { ReservationFlightInfo } from "./reservation-flight-info";
 import { ReservationStepper } from "./reservation-stepper";
 import { ReservationSummary } from "./reservation-summary";
+import {
+  buildPassengers,
+  type PassengerInfo,
+  type PassengerRecord,
+} from "@/lib/passengers";
 import { priceBlocks } from "@/lib/results";
 import { parseReservationParams } from "@/lib/results-url";
 
@@ -35,6 +42,26 @@ export function ReservationView() {
   const [detailsDirection, setDetailsDirection] =
     useState<DetailsDirection>("outbound");
 
+  // One passenger card per person in the search.
+  const [passengers, setPassengers] = useState<PassengerRecord[]>(() =>
+    buildPassengers(
+      reservation.counts.adult,
+      reservation.counts.child,
+      reservation.counts.infant,
+    ),
+  );
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+  function savePassenger(info: PassengerInfo) {
+    if (editingIndex === null) return;
+    setPassengers((current) =>
+      current.map((passenger, index) =>
+        index === editingIndex ? { ...passenger, info } : passenger,
+      ),
+    );
+    setEditingIndex(null);
+  }
+
   const block =
     priceBlocks.find((item) => item.id === reservation.blockId) ??
     priceBlocks[0];
@@ -52,6 +79,16 @@ export function ReservationView() {
     reservation.counts.adult +
     reservation.counts.child +
     reservation.counts.infant;
+
+  // The trip summary contact mirrors the first passenger once it is filled.
+  const firstPassenger = passengers[0]?.info;
+  const contact = firstPassenger
+    ? {
+        name: `${firstPassenger.firstName} ${firstPassenger.lastName}`,
+        email: firstPassenger.email,
+        phone: firstPassenger.phone,
+      }
+    : null;
 
   return (
     <AppShell>
@@ -76,19 +113,33 @@ export function ReservationView() {
                 }}
               />
 
-              {/* Next passes: pasajeros, contacto, información y pago. */}
+              <PassengersSection
+                passengers={passengers}
+                onEdit={(index) => setEditingIndex(index)}
+              />
+
+              {/* Next passes: contacto, información y pago. */}
             </div>
 
             <ReservationSummary
               block={block}
               travellers={travellers}
               tripLabel={isRoundTrip ? "Ida y vuelta" : "Solo ida"}
-              contact={null}
+              contact={contact}
               holdSeconds={HOLD_SECONDS}
             />
           </div>
         </div>
       </div>
+
+      {editingIndex !== null && passengers[editingIndex] ? (
+        <PassengerOverlay
+          index={editingIndex}
+          passenger={passengers[editingIndex]}
+          onClose={() => setEditingIndex(null)}
+          onSave={savePassenger}
+        />
+      ) : null}
 
       <FlightDetailsDrawer
         open={detailsOpen}
