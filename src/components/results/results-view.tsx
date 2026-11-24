@@ -22,6 +22,7 @@ import { cn } from "@/lib/cn";
 import { filterBlocks } from "@/lib/filter-results";
 import { priceBlocks } from "@/lib/results";
 import {
+  buildReservationUrl,
   buildResultsUrl,
   formatDayMonth,
   parseResultsParams,
@@ -273,6 +274,26 @@ export function ResultsView() {
     </div>
     );
 
+  /** Continue → reservation screen with the chosen combination. */
+  function goToReservation() {
+    if (!selectedBlock) return;
+    router.push(
+      buildReservationUrl({
+        search: {
+          tripType: search.tripType,
+          origin: search.origin,
+          destination: search.destination,
+          departureDate: search.departureDate,
+          returnDate: search.returnDate,
+          counts: search.counts,
+        },
+        blockId: selectedBlock.id,
+        outboundId: selection?.outboundId,
+        returningId: search.isRoundTrip ? selection?.returnId : undefined,
+      }),
+    );
+  }
+
   const summaryCard = (
     <TripSummaryCard
       block={selectedBlock}
@@ -280,6 +301,7 @@ export function ResultsView() {
       returning={selectedReturning}
       showReturn={search.isRoundTrip}
       onOpenDetails={showTripDetails}
+      onContinue={goToReservation}
     />
   );
 

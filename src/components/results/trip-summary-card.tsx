@@ -41,6 +41,8 @@ export type TripSummaryCardProps = {
   showReturn: boolean;
   /** Opens the flight-details drawer (tabs variant). */
   onOpenDetails?: () => void;
+  /** Goes to the reservation screen. */
+  onContinue?: () => void;
 };
 
 /**
@@ -56,6 +58,7 @@ export function TripSummaryCard({
   returning,
   showReturn,
   onOpenDetails,
+  onContinue,
 }: TripSummaryCardProps) {
   const detailKey = `${block?.id ?? "none"}-${outbound?.id ?? ""}-${
     returning?.id ?? ""
@@ -123,6 +126,7 @@ export function TripSummaryCard({
       <button
         type="button"
         disabled={!block}
+        onClick={onContinue}
         className="mt-5 h-[30px] w-full rounded-[4px] bg-brand text-xs font-semibold tracking-[-0.04em] text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
       >
         Continuar

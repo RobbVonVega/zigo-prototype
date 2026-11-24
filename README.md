@@ -29,6 +29,8 @@ cliente.
 | Pantalla de resultados (6724-5421) | Listo |
 | Detalle de vuelo en drawer (6741-11055 / 6740-9495) | Listo |
 | Layout compacto de resultados (6729-3375 / 6733-4512) | Listo |
+| Reserva paso 1: info de vuelos + resumen con timer (6759-7498 / 6761-15161 / 6761-15597) | Listo |
+| Reserva: pasajeros, contacto, opciones e info importante | Pendiente |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -39,6 +41,7 @@ buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
 | --- | --- |
 | `/` | Búsqueda de vuelos + promo + próximos vuelos |
 | `/resultados` | Resultados con panel de búsqueda, filtros, 5 bloques de precio y resumen sticky |
+| `/reserva` | Reserva paso 1: stepper, info de vuelos y resumen con timer |
 | `/styleguide` | Referencia interna de tokens |
 
 La búsqueda viaja por la URL (`/resultados?trip=round-trip&from=UIO&to=BOG&dep=…`), así que un enlace directo funciona y la URL se actualiza en vivo con cada cambio del formulario. Los filtros avanzados filtran los itinerarios mock al instante (aerolínea, escalas, cabina, equipaje, horarios y escalas), sin botón de búsqueda; si nada coincide se muestra un estado vacío con `Borrar filtros`.
@@ -78,6 +81,11 @@ src/
       layout-toggle.tsx        # toggle Estándar / Compact en el top bar
       compact-query-bar.tsx    # barra compacta con datos + Editar
       compact-search-editor.tsx # buscador completo del layout compacto
+    reservation/
+      reservation-view.tsx        # pantalla de reserva (paso 1)
+      reservation-stepper.tsx     # stepper Contacto → Pago
+      reservation-flight-info.tsx # "Tu viaje a …" + tarjeta de itinerario
+      reservation-summary.tsx     # resumen + contacto + timer
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -109,6 +117,8 @@ src/
     results.ts         # 5 itinerarios mock + formato COP
     results-url.ts     # serialización/parseo de la búsqueda en la URL
     flight-details.ts  # segmentos/escalas derivados para el drawer
+  hooks/
+    use-countdown.ts   # timer de la tarifa reservada
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)

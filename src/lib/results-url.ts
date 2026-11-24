@@ -61,6 +61,65 @@ export function parseResultsParams(params: URLSearchParams): ResultsSearch {
   };
 }
 
+/** "Vie, 18/Dic/2026" */
+export function formatFlightDate(date: Date) {
+  const weekday = format(date, "EEE", { locale: es });
+  const month = format(date, "MMM", { locale: es });
+  const capitalizedWeekday =
+    weekday.charAt(0).toUpperCase() + weekday.slice(1);
+  const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+  return `${capitalizedWeekday}, ${format(date, "dd")}/${capitalizedMonth}/${format(date, "yyyy")}`;
+}
+
+/* ---------------------------------------------------------------------------
+ * Reservation screen (/reserva): the search plus the chosen combination.
+--------------------------------------------------------------------------- */
+
+export type ReservationSearch = ResultsSearch & {
+  blockId: string;
+  outboundId?: string;
+  returningId?: string;
+};
+
+function searchParams(search: ResultsSearch) {
+  const params = new URLSearchParams();
+  params.set("trip", search.tripType);
+  if (search.origin) params.set("from", search.origin.code);
+  if (search.destination) params.set("to", search.destination.code);
+  if (search.departureDate) {
+    params.set("dep", format(search.departureDate, "yyyy-MM-dd"));
+  }
+  if (search.tripType === "round-trip" && search.returnDate) {
+    params.set("ret", format(search.returnDate, "yyyy-MM-dd"));
+  }
+  params.set("adults", String(search.counts.adult));
+  params.set("children", String(search.counts.child));
+  params.set("infants", String(search.counts.infant));
+  return params;
+}
+
+export function buildReservationUrl(input: {
+  search: ResultsSearch;
+  blockId: string;
+  outboundId?: string;
+  returningId?: string;
+}): string {
+  const params = searchParams(input.search);
+  params.set("block", input.blockId);
+  if (input.outboundId) params.set("out", input.outboundId);
+  if (input.returningId) params.set("back", input.returningId);
+  return `/reserva?${params.toString()}`;
+}
+
+export function parseReservationParams(params: URLSearchParams): ReservationSearch {
+  return {
+    ...parseResultsParams(params),
+    blockId: params.get("block") ?? "block-1",
+    outboundId: params.get("out") ?? undefined,
+    returningId: params.get("back") ?? undefined,
+  };
+}
+
 /** "18 Dic" */
 export function formatDayMonth(date: Date) {
   const day = format(date, "d", { locale: es });

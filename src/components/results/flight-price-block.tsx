@@ -4,39 +4,9 @@ import { useState } from "react";
 
 import { FlightOptionRow } from "./flight-option-row";
 import { Icon } from "@/components/icon";
+import { LuggageIcons } from "@/components/ui/luggage-icons";
 import { cn } from "@/lib/cn";
-import {
-  formatCop,
-  luggageFlags,
-  type LuggageType,
-  type PriceBlock,
-} from "@/lib/results";
-
-const LUGGAGE_SIZES: readonly [number, number][] = [
-  [7, 8],
-  [8, 12],
-  [11, 16],
-];
-
-function LuggageIcons({ type }: { type: LuggageType }) {
-  return (
-    <span className="flex items-end gap-[2px]">
-      {luggageFlags(type).map((included, index) => (
-        <span
-          key={index}
-          className={cn(
-            "rounded-[2px] border",
-            included ? "border-cyan-400" : "border-[#D3D3D3]",
-          )}
-          style={{
-            width: LUGGAGE_SIZES[index][0],
-            height: LUGGAGE_SIZES[index][1],
-          }}
-        />
-      ))}
-    </span>
-  );
-}
+import { formatCop, type PriceBlock } from "@/lib/results";
 
 function FlightColumn({
   title,
