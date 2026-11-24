@@ -35,6 +35,10 @@ export type ReservationSummaryProps = {
   contact: ReservationContact | null;
   /** Fare hold in seconds. */
   holdSeconds: number;
+  /** Payment screen hides the total (it moves to the strip). */
+  showTotal?: boolean;
+  /** Payment screen shows the timer in the title row instead. */
+  showTimer?: boolean;
 };
 
 /**
@@ -47,6 +51,8 @@ export function ReservationSummary({
   tripLabel,
   contact,
   holdSeconds,
+  showTotal = true,
+  showTimer = true,
 }: ReservationSummaryProps) {
   const remaining = useCountdown(holdSeconds);
 
@@ -67,13 +73,17 @@ export function ReservationSummary({
             <SummaryRow label="Aerolínea" value={block.airline.name} />
             <SummaryRow label="Equipaje" value={block.luggage.label} />
 
-            <div className="h-px w-full bg-line" />
+            {showTotal ? (
+              <>
+                <div className="h-px w-full bg-line" />
 
-            <SummaryRow
-              strong
-              label="Total"
-              value={`${formatCop(block.price)} COP`}
-            />
+                <SummaryRow
+                  strong
+                  label="Total"
+                  value={`${formatCop(block.price)} COP`}
+                />
+              </>
+            ) : null}
           </dl>
         </section>
 
@@ -95,6 +105,7 @@ export function ReservationSummary({
           )}
         </section>
 
+        {showTimer ? (
         <section className="border-t border-line bg-[#FFF5ED] px-3 py-6">
           <div className="flex items-start justify-between gap-2">
             <p className="text-xs leading-[9px] font-medium tracking-[-0.04em] text-ink">
@@ -113,6 +124,7 @@ export function ReservationSummary({
             el tiempo expira, tendrás que volver a realizar tu búsqueda.
           </p>
         </section>
+        ) : null}
       </div>
     </aside>
   );

@@ -22,6 +22,7 @@ import {
   type PassengerInfo,
   type PassengerRecord,
 } from "@/lib/passengers";
+import { buildPaymentUrl } from "@/lib/payment";
 import { priceBlocks } from "@/lib/results";
 import { parseReservationParams } from "@/lib/results-url";
 
@@ -175,7 +176,27 @@ export function ReservationView() {
 
               <ImportantInfoSection />
 
-              <PaymentSection block={block} />
+              <PaymentSection
+                block={block}
+                onPay={() =>
+                  router.push(
+                    buildPaymentUrl({
+                      search: {
+                        tripType: reservation.tripType,
+                        origin: reservation.origin,
+                        destination: reservation.destination,
+                        departureDate: reservation.departureDate,
+                        returnDate: reservation.returnDate,
+                        counts: reservation.counts,
+                      },
+                      blockId: block.id,
+                      outboundId: outbound.id,
+                      returningId: isRoundTrip ? returning.id : undefined,
+                      contact,
+                    }),
+                  )
+                }
+              />
             </div>
 
             <ReservationSummary

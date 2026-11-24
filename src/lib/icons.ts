@@ -42,4 +42,6 @@ export type IconName =
   | "info"
   | "copy"
   // Search loader
-  | "plane";
+  | "plane"
+  // Payment
+  | "arrow-square-out";

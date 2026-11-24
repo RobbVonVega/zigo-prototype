@@ -33,6 +33,7 @@ cliente.
 | Reserva: pasajeros (tarjetas + modal de empresa/persona) | Listo |
 | Reserva: contacto editable, info importante, proceder al pago | Listo |
 | Reserva: skeleton de carga | Listo |
+| Pago: esperando / error / expirado / éxito (6770-7488, 6775-15138, 6775-14878, 6775-7708) | Listo |
 
 El sitio lleva `noindex, nofollow` para que el prototipo no se indexe en
 buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
@@ -44,6 +45,7 @@ buscadores. Todo el contenido está en estado de reposo / vacío por ahora.
 | `/` | Búsqueda de vuelos + promo + próximos vuelos |
 | `/resultados` | Resultados con panel de búsqueda, filtros, 5 bloques de precio y resumen sticky |
 | `/reserva` | Reserva paso 1: stepper, info de vuelos y resumen con timer |
+| `/pago` | Pago con estados (toggle en el top bar) + confirmación |
 | `/styleguide` | Referencia interna de tokens |
 
 La búsqueda viaja por la URL (`/resultados?trip=round-trip&from=UIO&to=BOG&dep=…`), así que un enlace directo funciona y la URL se actualiza en vivo con cada cambio del formulario. Los filtros avanzados filtran los itinerarios mock al instante (aerolínea, escalas, cabina, equipaje, horarios y escalas), sin botón de búsqueda; si nada coincide se muestra un estado vacío con `Borrar filtros`.
@@ -95,6 +97,13 @@ src/
       important-info-section.tsx  # textos de políticas
       payment-section.tsx         # proceder al pago
       reservation-skeleton.tsx    # skeleton de carga
+    payment/
+      payment-view.tsx            # pantalla de pago (4 estados)
+      payment-state-toggle.tsx    # toggle Pago / Error / Expirado / Éxito
+      payment-status-card.tsx     # banner esperando / error / expirado
+      payment-strip.tsx           # ruta + fechas + pasajeros (+ total)
+      payment-methods.tsx         # link de pago + QR
+      payment-cards.tsx           # confirmación y recargo por expiración
     search-loader.tsx  # modal de búsqueda con loader
     flight-search/
       flight-search-section.tsx
@@ -131,6 +140,7 @@ src/
   lib/
     passengers.ts      # directorio mock de empresas/personas + tipos
     important-info.ts  # textos de información importante
+    payment.ts         # estados de pago, URLs y formato
 public/
   brand/               # logo ZIGO (SVG exportado de Figma)
   fonts/               # General Sans 400/500/600/700 (woff2, self-hosted)
