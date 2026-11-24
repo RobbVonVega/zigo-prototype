@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/app-shell";
@@ -39,13 +39,17 @@ const LOADING_MS = 700;
  */
 export function ReservationView() {
   const params = useSearchParams();
+  const router = useRouter();
 
   const reservation = useMemo(
     () => parseReservationParams(new URLSearchParams(params.toString())),
     [params],
   );
 
-  const [loading, setLoading] = useState(true);
+  // Only arrivals from "Continuar" (loading=1) start with the skeleton.
+  const [loading, setLoading] = useState(
+    () => new URLSearchParams(params.toString()).get("loading") === "1",
+  );
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsDirection, setDetailsDirection] =
     useState<DetailsDirection>("outbound");
@@ -69,9 +73,19 @@ export function ReservationView() {
   const [contactEdited, setContactEdited] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), LOADING_MS);
+    if (!loading) return;
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+
+      // Drop the flag so a refresh goes straight to the content.
+      const next = new URLSearchParams(params.toString());
+      next.delete("loading");
+      router.replace(`/reserva?${next.toString()}`, { scroll: false });
+    }, LOADING_MS);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading, params, router]);
 
   function savePassenger(info: PassengerInfo) {
     if (editingIndex === null) return;

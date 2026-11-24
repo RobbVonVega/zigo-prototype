@@ -106,6 +106,8 @@ export function buildReservationUrl(input: {
 }): string {
   const params = searchParams(input.search);
   params.set("block", input.blockId);
+  // Tells the reservation screen to show its skeleton for this arrival.
+  params.set("loading", "1");
   if (input.outboundId) params.set("out", input.outboundId);
   if (input.returningId) params.set("back", input.returningId);
   return `/reserva?${params.toString()}`;
